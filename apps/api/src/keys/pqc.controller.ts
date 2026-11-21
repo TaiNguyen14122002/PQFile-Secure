@@ -8,6 +8,7 @@ import { DbService } from '../db/db.service';
 import { activityLogs,keyBackups,pqcKeyHistory,pqcRecoveryPlans,recipients,trustedRecipientKeys,userKeys,users } from '../db/schema';
 import { readInput } from '../common/helpers';
 import { appendKeyEvent,eventDigest } from './key-history';
+import { recoveryPlanJson } from './optional-json-response';
 
 const uuid=z.string().uuid();
 const proofSchema=z.string().min(4000).max(5000);
@@ -189,7 +190,7 @@ export class PqcController {
  @Get('recovery') async recovery(@Req()req:any){
    const [plan]=await this.svc.db.select({encryptedPayload:pqcRecoveryPlans.encryptedPayload,updatedAt:pqcRecoveryPlans.updatedAt})
      .from(pqcRecoveryPlans).where(eq(pqcRecoveryPlans.userId,req.user.id)).limit(1);
-   return plan||null;
+   return recoveryPlanJson(plan);
  }
  @Post('recovery') async saveRecovery(@Req()req:any,@Body()raw:any){
    const payload=readInput(payloadShape,raw);const uid=req.user.id;

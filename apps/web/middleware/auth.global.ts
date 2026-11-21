@@ -1,6 +1,6 @@
 export default defineNuxtRouteMiddleware(async to=>{
   if(import.meta.server)return;
-  const publicRoutes=['/','/login','/register'];
+  const publicRoutes=['/','/login','/register','/onboarding'];
   const {user,loaded,load}=useAuth();
   if(!loaded.value)await load();
   if(!user.value && !publicRoutes.includes(to.path))return navigateTo('/login');

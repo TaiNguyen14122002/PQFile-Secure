@@ -7,12 +7,13 @@ import { keyBackups,userKeys } from '../db/schema';
 import { AuthGuard } from '../auth/auth.guard';
 import { readInput } from '../common/helpers';
 import { appendKeyEvent } from './key-history';
+import { keyBackupJson } from './optional-json-response';
 const keySchema=z.object({kemAlgorithm:z.enum(['ML-KEM-512','ML-KEM-768','ML-KEM-1024']),kemPublic:z.string().min(1000).max(5000),kemFingerprint:z.string().length(64),dsaPublic:z.string().min(2000).max(5000),dsaFingerprint:z.string().length(64),backup:z.string().min(100).max(200000),x25519Public:z.string().min(40).max(100).optional(),x25519Fingerprint:z.string().length(64).optional()});
 @Controller('keys') @UseGuards(AuthGuard)
 export class KeysController{
  constructor(private readonly svc:DbService){}
  @Get() async list(@Req() req:any){return await this.svc.db.select({id:userKeys.id,purpose:userKeys.purpose,algorithm:userKeys.algorithm,publicKey:userKeys.publicKey,fingerprint:userKeys.fingerprint,status:userKeys.status}).from(userKeys).where(eq(userKeys.userId,req.user.id));}
- @Get('backup') async backup(@Req() req:any){const [backup]=await this.svc.db.select({encryptedBlob:keyBackups.encryptedBlob,createdAt:keyBackups.createdAt}).from(keyBackups).where(eq(keyBackups.userId,req.user.id)).orderBy(keyBackups.createdAt).limit(1);return backup||null;}
+ @Get('backup') async backup(@Req() req:any){const [backup]=await this.svc.db.select({encryptedBlob:keyBackups.encryptedBlob,createdAt:keyBackups.createdAt}).from(keyBackups).where(eq(keyBackups.userId,req.user.id)).orderBy(keyBackups.createdAt).limit(1);return keyBackupJson(backup);}
  @Post() async save(@Req() req:any,@Body() raw:any){
    const data=readInput(keySchema,raw); const userId=req.user.id;
    const hash=(base64:string)=>createHash('sha256').update(Buffer.from(base64,'base64')).digest('hex');

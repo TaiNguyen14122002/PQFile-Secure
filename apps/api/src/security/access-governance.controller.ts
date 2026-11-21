@@ -6,6 +6,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { activityLogs,fileShares,files,users,workspaces,workspaceMembers } from '../db/schema';
 import { readInput } from '../common/helpers';
 import { parseGovernanceTimestamp } from './governance-date.utils';
+import { hasActiveGrantExpiration, readTimestamp } from '../common/runtime-safety';
 
 const LIMIT_FILES=80;
 const LIMIT_GRANTS=350;
@@ -45,18 +46,19 @@ export class AccessGovernanceController {
    const key=`${log.fileId}:${log.actorId}`;
    if(!last.has(key))last.set(key,at);
   }
-  const count=new Map<string,number>();for(const grant of snap.grants){if(!grant.expiresAt||grant.expiresAt.getTime()>now)count.set(grant.fileId,(count.get(grant.fileId)||0)+1);}
+  const count=new Map<string,number>();for(const grant of snap.grants){if(hasActiveGrantExpiration(grant.expiresAt,now))count.set(grant.fileId,(count.get(grant.fileId)||0)+1);}
   const labels=new Map(snap.owned.map(f=>[f.id,f.label]));
   const review=snap.grants.map(g=>{
    const recent=last.get(`${g.fileId}:${g.recipientId}`);
    // Downloads prior to this grant do not justify keeping the new grant.
-   const lastAccess=recent&&recent.getTime()>=g.createdAt.getTime()?recent:null;
-   const sharedDays=Math.floor((now-g.createdAt.getTime())/MS_DAY);
-   const idleDays=Math.floor((now-(lastAccess||g.createdAt).getTime())/MS_DAY);
-   const active=!g.expiresAt||g.expiresAt.getTime()>now;
+   const grantedAt=readTimestamp(g.createdAt)??now;
+   const lastAccess=recent&&recent.getTime()>=grantedAt?recent:null;
+   const sharedDays=Math.max(0,Math.floor((now-grantedAt)/MS_DAY));
+   const idleDays=Math.max(0,Math.floor((now-(readTimestamp(lastAccess)??grantedAt))/MS_DAY));
+   const active=hasActiveGrantExpiration(g.expiresAt,now);
    const reasons:string[]=[];let score=0;
    if(g.status!=='ACTIVE'){score=98;reasons.push('Tài khoản người nhận không còn hoạt động');}
-   if(g.taskDeadlineAt&&g.taskDeadlineAt.getTime()<now){score=Math.max(score,90);reasons.push('Đã qua hạn công việc do chủ sở hữu khai báo');}
+   if(g.taskDeadlineAt&&(readTimestamp(g.taskDeadlineAt)??Number.POSITIVE_INFINITY)<now){score=Math.max(score,90);reasons.push('Đã qua hạn công việc do chủ sở hữu khai báo');}
    if(!g.expiresAt && sharedDays>=30){score=Math.max(score,62);reasons.push('Quyền chia sẻ trên 30 ngày nhưng không có thời hạn tự hết hiệu lực');}
    if(idleDays>=60){score=Math.max(score,78);reasons.push(`Không ghi nhận tải mới trong ${idleDays} ngày`);}
    else if(idleDays>=30){score=Math.max(score,48);reasons.push(`Không ghi nhận tải mới trong ${idleDays} ngày`);}
@@ -101,7 +103,7 @@ export class AccessGovernanceController {
  }
  @Get('graph') async graph(@Req()req:any){
   const ownerId=req.user.id,snap=await this.snapshot(ownerId),now=Date.now();
-  const live=snap.grants.filter(g=>!g.revokedAt&&(!g.expiresAt||g.expiresAt.getTime()>now));
+  const live=snap.grants.filter(g=>!g.revokedAt&&(hasActiveGrantExpiration(g.expiresAt,now)));
   const reachable=new Set(live.map(g=>g.recipientId));
   const groups=await this.svc.db.select({id:workspaces.id,name:workspaces.name,userId:workspaceMembers.userId})
    .from(workspaces).leftJoin(workspaceMembers,eq(workspaceMembers.workspaceId,workspaces.id))

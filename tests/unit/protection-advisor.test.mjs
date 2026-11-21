@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { recommendProtection } from '../../apps/web/utils/protection-advisor.ts';
+const common = {category:'general',confidentiality:'internal',recipients:3,protectionYears:2,totalSizeGb:1,externalRecipients:false};
+test('personal default gets bounded standard policy',()=>{const x=recommendProtection(common);assert.equal(x.level,'standard');assert.equal(x.expiresInDays,30);});
+test('restricted files use strict policy',()=>{const x=recommendProtection({...common,confidentiality:'restricted'});assert.equal(x.level,'strict');assert.equal(x.expiresInDays,1);assert.match(x.algorithm,/ML-KEM-1024/);});
+test('large recipient count increases protection',()=>{const x=recommendProtection({...common,recipients:30});assert.equal(x.level,'enhanced');});
+test('long-term protection suggests stronger options',()=>{const x=recommendProtection({...common,protectionYears:10});assert.match(x.algorithm,/ML-KEM-1024/);});
+test('invalid input rejected',()=>assert.throws(()=>recommendProtection({...common,recipients:-1})));
+test('external high sensitivity escalates',()=>{const x=recommendProtection({...common,confidentiality:'confidential',externalRecipients:true,recipients:10});assert.equal(x.level,'strict');});

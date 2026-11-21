@@ -4,6 +4,7 @@ import { DbService } from '../db/db.service';
 import { activityLogs, securityEvents } from '../db/schema';
 import { AuthGuard } from '../auth/auth.guard';
 import { SecurityMonitorService } from './security-monitor.service';
+import { optionalQueryText } from '../common/query-params';
 
 type SecurityStatus='all'|'unread'|'reviewed';
 function numberParam(value:string|undefined, fallback:number, min:number, max:number):number {
@@ -29,13 +30,14 @@ export class SecurityController {
  async paged(@Req()req:any,@Query('page') pageRaw?:string,@Query('size') sizeRaw?:string,
   @Query('status') statusRaw?:string,@Query('severity') severityRaw?:string,
   @Query('q') qRaw?:string,@Query('from') fromRaw?:string,@Query('to') toRaw?:string){
-  const page=numberParam(pageRaw,1,1,100000),pageSize=numberParam(sizeRaw,15,5,100);
-  const status=(statusRaw||'all') as SecurityStatus;
+  const page=numberParam(optionalQueryText(pageRaw,'page'),1,1,100000),
+    pageSize=numberParam(optionalQueryText(sizeRaw,'size'),15,5,100);
+  const status=(optionalQueryText(statusRaw,'status')||'all') as SecurityStatus;
   if(!['all','unread','reviewed'].includes(status))throw new BadRequestException('Trạng thái không hợp lệ');
-  const severity=severityRaw||'all';
+  const severity=optionalQueryText(severityRaw,'severity')||'all';
   if(!['all','critical','high','medium'].includes(severity))throw new BadRequestException('Mức độ không hợp lệ');
-  const q=(qRaw||'').trim();if(q.length>100)throw new BadRequestException('Từ khóa quá dài');
-  const from=dayParam(fromRaw),to=dayParam(toRaw,true);
+  const q=(optionalQueryText(qRaw,'q')||'').trim();if(q.length>100)throw new BadRequestException('Từ khóa quá dài');
+  const from=dayParam(optionalQueryText(fromRaw,'from')),to=dayParam(optionalQueryText(toRaw,'to'),true);
   if(from&&to&&from>to)throw new BadRequestException('Ngày kết thúc phải sau ngày bắt đầu');
   const conditions=[eq(securityEvents.userId,req.user.id),gte(securityEvents.riskScore,40)];
   if(status==='unread')conditions.push(isNull(securityEvents.acknowledgedAt));

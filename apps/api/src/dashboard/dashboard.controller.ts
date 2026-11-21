@@ -2,6 +2,7 @@ import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { and, count, desc, eq, isNull } from 'drizzle-orm';
 import { DbService } from '../db/db.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { hasActiveGrantExpiration, readTimestamp } from '../common/runtime-safety';
 import { activityLogs, files, fileShares, workspaceMembers } from '../db/schema';
 
 /** Overview of the CURRENT USER only. Never sends ciphertext or secret key material. */
@@ -50,13 +51,13 @@ export class DashboardController {
     const accessible = new Map<string, typeof owned[number]>();
     for (const file of owned) accessible.set(file.id, file);
     for (const file of incoming) {
-      if (!file.expiresAt || file.expiresAt.getTime() > now.getTime()) {
+      if (hasActiveGrantExpiration(file.expiresAt, now.getTime())) {
         if (!accessible.has(file.id)) accessible.set(file.id, file);
       }
     }
     const currentFiles = [...accessible.values()];
     const activeShares = outgoing.filter(s => !s.revokedAt &&
-      (!s.expiresAt || s.expiresAt.getTime() > now.getTime()) &&
+      (hasActiveGrantExpiration(s.expiresAt, now.getTime())) &&
       s.fileStatus === 'ACTIVE' && !s.fileDeletedAt);
 
     const months: { key: string; label: string; uploads: number; shares: number }[] = [];
@@ -65,12 +66,16 @@ export class DashboardController {
       months.push({ key: d.toISOString().slice(0, 7), label: `Tháng ${d.getUTCMonth() + 1}`, uploads: 0, shares: 0 });
     }
     const monthByKey = new Map(months.map(m => [m.key, m]));
+    const monthKey = (value: unknown) => {
+      const time = readTimestamp(value);
+      return time === null ? '' : new Date(time).toISOString().slice(0, 7);
+    };
     for (const file of owned) {
-      const month = monthByKey.get(file.createdAt.toISOString().slice(0, 7));
+      const month = monthByKey.get(monthKey(file.createdAt));
       if (month) month.uploads++;
     }
     for (const share of outgoing) {
-      const month = monthByKey.get(share.createdAt.toISOString().slice(0, 7));
+      const month = monthByKey.get(monthKey(share.createdAt));
       if (month) month.shares++;
     }
 

@@ -3,6 +3,7 @@ import { and, count, desc, eq, gte, ilike, lte, or } from 'drizzle-orm';
 import { DbService } from '../db/db.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { activityLogs, files } from '../db/schema';
+import { optionalQueryText } from '../common/query-params';
 
 function parseDay(value:string|undefined,endOfDay=false):Date|undefined {
   if(!value)return undefined;
@@ -31,10 +32,16 @@ export class ActivityController {
   async paged(@Req() req:any,@Query('page') pageRaw?:string,@Query('size') sizeRaw?:string,
     @Query('q') qRaw?:string,@Query('action') actionRaw?:string,
     @Query('from') fromRaw?:string,@Query('to') toRaw?:string) {
-    const page=Math.max(1,Math.min(100000,Number.parseInt(pageRaw||'1',10)||1));
-    const pageSize=Math.max(5,Math.min(100,Number.parseInt(sizeRaw||'25',10)||25));
-    const q=(qRaw||'').trim();
+    const pageText=optionalQueryText(pageRaw,'page') || '1';
+    const sizeText=optionalQueryText(sizeRaw,'size') || '25';
+    if(!/^\d+$/.test(pageText)||!/^\d+$/.test(sizeText))
+      throw new BadRequestException('Tham số phân trang phải là số nguyên dương');
+    const page=Math.max(1,Math.min(100000,Number(pageText)));
+    const pageSize=Math.max(5,Math.min(100,Number(sizeText)));
+    const q=(optionalQueryText(qRaw,'q')||'').trim();
     if(q.length>100)throw new BadRequestException('Từ khóa tìm kiếm quá dài');
+    actionRaw=optionalQueryText(actionRaw,'action');
+    fromRaw=optionalQueryText(fromRaw,'from'); toRaw=optionalQueryText(toRaw,'to');
     if(actionRaw&&!/^[A-Z_]{3,80}$/.test(actionRaw))throw new BadRequestException('Loại hoạt động không hợp lệ');
     const from=parseDay(fromRaw),to=parseDay(toRaw,true);
     if(from&&to&&from>to)throw new BadRequestException('Khoảng ngày không hợp lệ');

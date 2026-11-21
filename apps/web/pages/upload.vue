@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { UploadCloud,FileText,FolderOpen,LockKeyhole,KeyRound,ShieldCheck,Users,Settings,CheckCircle2,AlertCircle,Trash2,LoaderCircle,Search,FileCheck2,ShieldAlert,AlertTriangle,EyeOff,BrainCircuit,Gauge } from 'lucide-vue-next';
+import { UploadCloud,FileText,FolderOpen,LockKeyhole,KeyRound,ShieldCheck,Users,Settings,CheckCircle2,AlertCircle,Trash2,LoaderCircle,Search,FileCheck2,ShieldAlert,AlertTriangle,EyeOff,Gauge } from 'lucide-vue-next';
 import { encryptFile,benchmarkKems } from '@pqfile/crypto-core';
 import type { KemAlgorithm, PublicRecipient } from '@pqfile/crypto-core';
 import { getUnlockedVault } from '~/utils/vault-session';
@@ -9,6 +9,7 @@ import type {SafetyResult} from '~/utils/file-safety';
 import type {DocumentScan, Classification} from '~/utils/security-analysis';
 const {user}=useAuth();
 const picker=ref<HTMLInputElement|null>(null);
+const mobileStep=ref<'files'|'settings'>('files');
 const hovering=ref(false),selected=ref<File[]>([]),busy=ref(false),error=ref(''),success=ref(''),progress=ref(''),keyError=ref(''),doneCount=ref(0);
 const wrapMode=ref<'PQC'|'HYBRID'>('PQC');
 const kem=ref<KemAlgorithm>('ML-KEM-768'),cipher='AES-256-GCM',signature='ML-DSA-65';
@@ -128,28 +129,35 @@ async function upload(){
 }
 </script>
 <template>
-  <div class="pq-refined-page pq-library-pattern pq-space-optimized pq-refined-upload">
+  <div class="pq-refined-page pq-library-pattern pq-space-optimized pq-refined-upload pq-upload-fit-screen">
     <HeroBanner />
-    <div class="pq-upload-layout mx-auto -mt-1 grid max-w-[1680px] items-start gap-3 px-3 pb-10 pt-2 sm:px-4 xl:grid-cols-[minmax(0,1.7fr)_minmax(350px,1fr)] xl:gap-4 xl:px-6">
-      <section class="soft-card min-w-0 p-4 sm:p-6">
-        <div class="mb-3 flex items-center gap-4 border-b border-[#d4e6f9] pb-3"><UploadCloud :size="39" class="shrink-0 text-[#057bfd]" stroke-width="2.1" /><h2 class="text-[23px] font-[800] tracking-tight sm:text-[27px]">Tải lên và bảo vệ tệp tin</h2></div>
-        <div class="pq-upload-dropzone relative grid min-h-[335px] place-items-center rounded-[24px] border-[2px] border-dashed border-[#087ffd] bg-gradient-to-b from-[#e0f1ff]/90 to-[#eaf7ff]/95 px-5 py-6 text-center transition" :class="hovering?'ring-4 ring-blue-300 bg-[#d5eeff]':' '" tabindex="0" role="button" aria-label="Kéo thả hoặc chọn tệp" :aria-disabled="busy" @click="picker?.click()" @keydown.enter="picker?.click()" @keydown.space.prevent="picker?.click()" @dragenter.prevent="hovering=true" @dragover.prevent="hovering=true" @dragleave.prevent="hovering=false" @drop.prevent.stop="drop">
-          <div>
+    <div class="pq-upload-step-tabs" role="group" aria-label="Các bước tải tệp">
+      <button type="button" :aria-pressed="mobileStep==='files'" :class="{'is-active':mobileStep==='files'}" @click="mobileStep='files'">1. Chọn và kiểm tra tệp <span v-if="selected.length">({{selected.length}})</span></button>
+      <button type="button" :aria-pressed="mobileStep==='settings'" :class="{'is-active':mobileStep==='settings'}" @click="mobileStep='settings'">2. Thiết lập bảo vệ</button>
+    </div>
+    <div class="pq-upload-layout mx-auto grid max-w-[1680px] items-stretch gap-3 px-3 pt-2 sm:px-4" :class="mobileStep==='files'?'is-step-files':'is-step-settings'">
+      <section class="soft-card pq-upload-panel pq-upload-panel--files min-w-0 p-4 sm:p-5" tabindex="0" role="region" aria-label="Chọn tệp và xem kết quả kiểm tra">
+        <div class="pq-upload-panel-heading mb-3 flex items-center gap-3 border-b border-[#d4e6f9] pb-3"><UploadCloud :size="39" class="shrink-0 text-[#057bfd]" stroke-width="2.1" /><h2 class="text-[23px] font-[800] tracking-tight sm:text-[27px]">Tải lên và bảo vệ tệp tin</h2></div>
+        <div class="pq-upload-dropzone relative grid place-items-center rounded-2xl border-2 border-dashed border-[#087ffd] bg-[#f0f7ff] px-4 py-4 text-center transition" :class="hovering?'ring-4 ring-blue-300 bg-[#d5eeff]':' '" tabindex="0" role="button" aria-label="Kéo thả hoặc chọn tệp" :aria-disabled="busy" @click="picker?.click()" @keydown.enter="picker?.click()" @keydown.space.prevent="picker?.click()" @dragenter.prevent="hovering=true" @dragover.prevent="hovering=true" @dragleave.prevent="hovering=false" @drop.prevent.stop="drop">
+          <div class="pq-upload-drop-inner">
             <UploadCloud class="pq-upload-cloud mx-auto mb-1 text-[#0785ff]" :size="110" stroke-width="1.8" />
-            <p class="text-[25px] font-[850] leading-tight tracking-[-.5px] sm:text-[28px]">Kéo thả tệp tin vào đây</p>
-            <p class="mt-2 text-[17px]">hoặc nhấn để chọn tệp từ thiết bị</p>
-            <button class="primary-button pq-upload-picker mt-4 min-w-56 !py-2.5 text-[19px]" type="button" @click.stop="picker?.click()"><FolderOpen :size="23" /> Chọn tệp</button>
-            <p class="mt-4 text-[14px] text-[#324773] sm:text-[16px]">Hỗ trợ nhiều tệp · PDF, DOCX, XLSX, PNG, ZIP và các định dạng khác</p>
-            <p class="mt-1 text-xs text-[#456b9c]">Giới hạn bản MVP: 10 tệp/lượt, 20 MiB/tệp</p>
+            <p class="pq-upload-drop-title text-[20px] font-[850] leading-tight tracking-tight">Kéo thả tệp tin vào đây</p>
+            <p class="pq-upload-drop-hint mt-1 text-[14px]">hoặc nhấn để chọn tệp từ thiết bị</p>
+            <button class="primary-button pq-upload-picker mt-3 !py-2 text-[15px]" type="button" @click.stop="picker?.click()"><FolderOpen :size="23" /> Chọn tệp</button>
+            <p class="pq-upload-drop-formats mt-3 text-[12px] text-[#324773]">Hỗ trợ nhiều tệp · PDF, DOCX, XLSX, PNG, ZIP và các định dạng khác</p>
+            <p class="pq-upload-drop-limit mt-1 text-xs text-[#456b9c]">Giới hạn bản MVP: 10 tệp/lượt, 20 MiB/tệp</p>
           </div>
           <input ref="picker" class="hidden" type="file" multiple :disabled="busy" @change="attach(($event.target as HTMLInputElement).files);($event.target as HTMLInputElement).value=''" />
         </div>
-        <div class="mt-4 rounded-[18px] border border-[#dce9f9] bg-gradient-to-b from-[#f9fbff] to-[#f0f7ff] px-5 py-3.5 shadow-inner">
+        <div class="pq-upload-selected mt-3 rounded-xl border border-[#dce9f9] bg-[#f7faff] px-4 py-3">
           <div class="flex flex-wrap items-center gap-4"><div class="flex items-center gap-3"><FileText :size="29" class="text-[#087eff]" /><span class="whitespace-nowrap text-[18px] font-[800]">Tệp đã chọn</span></div><span class="hidden h-7 border-l-2 border-[#b8cae7] sm:block" /><span v-if="!selected.length" class="text-[15px] italic text-[#50638b]">Chưa có tệp nào được chọn</span><span v-else class="text-[14px] font-semibold text-[#256ca5]">{{selected.length}} tệp · {{sizeLabel(selectedSize)}}</span></div>
-          <ul v-if="selected.length" class="mt-3 space-y-2"><li v-for="(f,i) in selected" :key="i" class="flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm"><FileCheck2 :size="18" class="shrink-0 text-blue-600"/><span class="min-w-0 flex-1 truncate">{{f.name}}</span><span class="text-xs text-slate-500">{{sizeLabel(f.size)}}</span><button class="rounded p-1 text-rose-500 hover:bg-rose-50" :disabled="busy" :aria-label="'Bỏ '+f.name" @click="selected.splice(i,1)"><Trash2 :size="17" /></button></li></ul>
+          <ul v-if="selected.length" class="mt-2 space-y-2"><li v-for="(f,i) in selected.slice(0,3)" :key="fileKey(f)" class="flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm"><FileCheck2 :size="18" class="shrink-0 text-blue-600"/><span class="min-w-0 flex-1 truncate">{{f.name}}</span><span class="text-xs text-slate-500">{{sizeLabel(f.size)}}</span><button class="rounded p-1 text-rose-500 hover:bg-rose-50" :disabled="busy" :aria-label="'Bỏ '+f.name" @click="selected.splice(i,1)"><Trash2 :size="17" /></button></li></ul>
+          <details v-if="selected.length > 3" class="pq-upload-additional mt-2 text-sm"><summary class="cursor-pointer font-semibold text-blue-700">Xem {{selected.length - 3}} tệp còn lại</summary><ul class="mt-2 space-y-2"><li v-for="f in selected.slice(3)" :key="fileKey(f)" class="flex items-center gap-2 rounded-lg bg-white px-3 py-2"><FileCheck2 :size="18" class="shrink-0 text-blue-600"/><span class="min-w-0 flex-1 truncate">{{f.name}}</span><span class="text-xs text-slate-500">{{sizeLabel(f.size)}}</span><button class="rounded p-1 text-rose-500 hover:bg-rose-50" :disabled="busy" :aria-label="'Bỏ '+f.name" @click="selected.splice(selected.indexOf(f),1)"><Trash2 :size="17"/></button></li></ul></details>
         </div>
-        <section v-if="selected.length" class="mt-4 rounded-2xl border border-blue-200 bg-white p-4" aria-label="Phân loại và rà soát dữ liệu cá nhân">
-          <h3 class="flex items-center gap-2 font-extrabold text-blue-900"><BrainCircuit :size="21"/> Phân loại bảo mật &amp; kiểm tra thông tin cá nhân</h3>
+        <details v-if="selected.length" open class="pq-upload-scan mt-3 rounded-xl border border-blue-200 bg-white p-3" aria-label="Phân loại và rà soát dữ liệu cá nhân">
+          <summary class="cursor-pointer font-extrabold text-blue-900">Phân loại bảo mật &amp; kiểm tra thông tin cá nhân</summary>
+          <div class="pq-upload-scan-body mt-2">
+
           <p class="mt-1 text-xs text-slate-600">Mô hình Naive Bayes nhỏ kết hợp quy tắc, chạy cục bộ trên thiết bị. Kết quả chỉ mang tính gợi ý; nội dung không gửi về máy chủ.</p>
           <div v-for="f in selected" :key="fileKey(f)" class="mt-3 rounded-xl border border-blue-100 bg-blue-50/60 p-3 text-sm">
             <div class="flex flex-wrap items-center justify-between gap-2"><strong class="max-w-full break-all">{{f.name}}</strong><span v-if="scanning[fileKey(f)]" class="text-blue-700">Đang quét…</span><span v-else-if="fileScan(f)" class="rounded-full bg-white px-2 py-1 text-xs font-bold text-blue-900">{{fileScan(f).status==='complete'?'Đã quét':'Chưa quét đủ'}}</span></div>
@@ -178,18 +186,20 @@ async function upload(){
               <p v-else-if="fileScan(f).pii.length" class="mt-2 text-xs text-amber-800">Định dạng này chưa hỗ trợ tạo bản sao đã che an toàn. Hãy che dữ liệu trong ứng dụng soạn thảo trước khi chia sẻ.</p>
             </template>
           </div>
-        </section>
+          </div>
+        </details>
+        <button v-if="selected.length" class="pq-upload-next-step" type="button" @click="mobileStep='settings'">Tiếp tục: thiết lập bảo vệ →</button>
         <div v-if="error" role="alert" class="pq-alert pq-alert-error mt-3 flex items-start gap-2"><AlertCircle :size="19" class="shrink-0" />{{error}}</div>
         <div v-if="success" role="status" class="pq-alert pq-alert-success mt-3 flex items-start gap-2"><CheckCircle2 :size="19" class="shrink-0" />{{success}} <NuxtLink to="/files?tab=all" class="font-bold underline">Xem tệp vừa tải lên</NuxtLink></div>
       </section>
-      <section class="soft-card min-w-0 p-4 sm:p-6">
-        <div class="mb-3 flex items-center gap-4 border-b border-[#d4e6f9] pb-3"><Settings :size="35" class="text-[#087eff]" /><h2 class="text-[23px] font-[800] tracking-tight sm:text-[26px]">Thiết lập bảo vệ</h2></div>
-        <div class="space-y-2.5">
-          <div class="flex flex-wrap items-center gap-2 rounded-[16px] border border-blue-100 bg-[#f9fbfe] px-3.5 py-2.5 shadow-sm"><KeyRound class="shrink-0 text-[#087eff]" :size="26" /><label for="kem" class="min-w-36 flex-1 text-[15px] font-[800]">Bảo vệ khóa:</label><select id="kem" v-model="kem" class="pq-field pq-upload-parameter flex-1"><option>ML-KEM-512</option><option>ML-KEM-768</option><option>ML-KEM-1024</option></select></div>
-          <div class="rounded-[16px] border border-blue-100 bg-[#f9fbfe] px-3.5 py-3 text-sm"><label for="wrap-mode" class="mb-1 block font-extrabold text-blue-900">Chế độ thiết lập khóa</label><select id="wrap-mode" v-model="wrapMode" class="pq-field"><option value="PQC">ML-KEM (tương thích dữ liệu cũ)</option><option value="HYBRID">Lai ML-KEM + X25519 + HKDF</option></select><p class="mt-1 text-xs text-slate-600">Chế độ lai cần X25519 ở kho khóa của bạn và mọi người nhận. Bảo vệ CEK trên thiết bị; không thay đổi AES-GCM của tệp.</p><NuxtLink to="/pqc?tab=hybrid" class="text-xs font-bold text-blue-700 underline">Cấu hình khóa X25519 và thử nghiệm</NuxtLink></div>
-          <div class="flex flex-wrap items-center gap-2 rounded-[16px] border border-blue-100 bg-[#f9fbfe] px-3.5 py-2.5 shadow-sm"><LockKeyhole class="shrink-0 text-[#087eff]" :size="26" /><label class="min-w-36 flex-1 text-[15px] font-[800]">Mã hóa nội dung:</label><span class="pq-field pq-upload-parameter !flex flex-1 items-center font-semibold">{{cipher}}</span></div>
-          <div class="flex flex-wrap items-center gap-2 rounded-[16px] border border-blue-100 bg-[#f9fbfe] px-3.5 py-2.5 shadow-sm"><ShieldCheck class="shrink-0 text-[#087eff]" :size="26" /><label class="min-w-36 flex-1 text-[15px] font-[800]">Chữ ký số:</label><span class="pq-field pq-upload-parameter !flex flex-1 items-center font-semibold">{{signature}}</span></div>
-          <div class="flex flex-wrap items-center gap-2 rounded-[16px] border border-blue-100 bg-[#f9fbfe] px-3.5 py-2.5 shadow-sm"><Users class="shrink-0 text-[#087eff]" :size="26" /><label for="recip" class="min-w-36 flex-1 text-[15px] font-[800]">Người nhận:</label><select id="recip" v-model="recipientMode" class="pq-field pq-upload-parameter flex-1"><option value="self">Chỉ tôi</option><option value="someone">Tôi và người nhận</option></select></div>
+      <section class="soft-card pq-upload-panel pq-upload-panel--settings min-w-0 p-4 sm:p-5" tabindex="0" role="region" aria-label="Thiết lập và thực hiện mã hóa">
+        <div class="pq-upload-panel-heading mb-3 flex items-center gap-3 border-b border-[#d4e6f9] pb-3"><Settings :size="35" class="text-[#087eff]" /><h2 class="text-[23px] font-[800] tracking-tight sm:text-[26px]">Thiết lập bảo vệ</h2></div>
+        <div class="pq-upload-settings-list space-y-2">
+          <div class="pq-upload-setting-row flex items-center gap-2 rounded-xl border border-blue-100 bg-[#f9fbfe] px-3 py-2"><KeyRound class="shrink-0 text-[#087eff]" :size="26" /><label for="kem" class="min-w-36 flex-1 text-[15px] font-[800]">Bảo vệ khóa:</label><select id="kem" v-model="kem" class="pq-field pq-upload-parameter flex-1"><option>ML-KEM-512</option><option>ML-KEM-768</option><option>ML-KEM-1024</option></select></div>
+          <div class="pq-upload-wrap-row rounded-xl border border-blue-100 bg-[#f9fbfe] px-3 py-2 text-sm"><label for="wrap-mode" class="mb-1 block font-extrabold text-blue-900">Chế độ thiết lập khóa</label><select id="wrap-mode" v-model="wrapMode" class="pq-field"><option value="PQC">ML-KEM (tương thích dữ liệu cũ)</option><option value="HYBRID">Lai ML-KEM + X25519 + HKDF</option></select><details v-if="wrapMode==='HYBRID'" class="pq-upload-hybrid-help mt-1 text-xs text-slate-600"><summary class="cursor-pointer font-semibold text-blue-700">Điều kiện dùng chế độ lai</summary><p class="mt-1">Cần X25519 trong kho khóa của bạn và người nhận; bảo vệ CEK trên thiết bị, vẫn dùng AES-GCM cho nội dung tệp.</p><NuxtLink to="/pqc?tab=hybrid" class="font-bold text-blue-700 underline">Cấu hình khóa X25519 và thử nghiệm</NuxtLink></details></div>
+          <div class="pq-upload-setting-row flex items-center gap-2 rounded-xl border border-blue-100 bg-[#f9fbfe] px-3 py-2"><LockKeyhole class="shrink-0 text-[#087eff]" :size="26" /><label class="min-w-36 flex-1 text-[15px] font-[800]">Mã hóa nội dung:</label><span class="pq-field pq-upload-parameter !flex flex-1 items-center font-semibold">{{cipher}}</span></div>
+          <div class="pq-upload-setting-row flex items-center gap-2 rounded-xl border border-blue-100 bg-[#f9fbfe] px-3 py-2"><ShieldCheck class="shrink-0 text-[#087eff]" :size="26" /><label class="min-w-36 flex-1 text-[15px] font-[800]">Chữ ký số:</label><span class="pq-field pq-upload-parameter !flex flex-1 items-center font-semibold">{{signature}}</span></div>
+          <div class="pq-upload-setting-row flex items-center gap-2 rounded-xl border border-blue-100 bg-[#f9fbfe] px-3 py-2"><Users class="shrink-0 text-[#087eff]" :size="26" /><label for="recip" class="min-w-36 flex-1 text-[15px] font-[800]">Người nhận:</label><select id="recip" v-model="recipientMode" class="pq-field pq-upload-parameter flex-1"><option value="self">Chỉ tôi</option><option value="someone">Tôi và người nhận</option></select></div>
           <div v-if="recipientMode==='someone'" class="rounded-2xl border border-blue-100 bg-blue-50 p-3"><label class="form-label">Tìm tài khoản theo email</label><div class="flex gap-2"><input v-model="searchEmail" class="pq-field flex-1" placeholder="email@domain.com" @keydown.enter="searchRecipients"/><button class="rounded-xl bg-blue-600 px-3 text-white" :disabled="searchBusy||searchEmail.length<3" @click="searchRecipients"><Search :size="18"/></button></div><div v-for="p in found" :key="p.id" class="mt-2"><button class="w-full rounded-xl border px-3 py-2 text-left text-sm" :class="chosen?.id===p.id?'border-blue-600 bg-blue-100':'border-blue-100 bg-white'" @click="chosen=p"><strong>{{p.displayName}}</strong> · {{p.email}}<span class="block text-xs text-slate-500">{{p.key.algorithm}} · {{p.key.fingerprint.slice(0,16)}}…</span></button></div><p class="mt-2 text-xs text-slate-500">Để tạo quyền chia sẻ mới, hãy xác minh và ghim fingerprint trong Mật mã nâng cao → Khóa tin cậy trước.</p>
             <NuxtLink to="/pqc?tab=trust" class="mt-2 block text-xs font-bold text-blue-700 underline">Xác minh khóa người nhận trước khi mã hóa</NuxtLink>
             <label class="mt-3 block text-sm font-bold">Thời hạn chia sẻ<select v-model="expiryDays" class="pq-field mt-1"><option value="1">1 ngày</option><option value="7">7 ngày (khuyến nghị)</option><option value="30">30 ngày</option><option value="none">Không giới hạn (rủi ro cao)</option></select></label>
@@ -204,18 +214,18 @@ async function upload(){
         <div v-if="keyError" class="pq-alert pq-alert-error mt-4 text-sm">Không tải được thông tin khóa: {{keyError}} <button class="font-bold underline" @click="loadKeys">Thử lại</button></div>
         <div v-else-if="!hasKey" class="pq-alert mt-4 text-sm">Tài khoản chưa có bộ khóa mật mã. <NuxtLink to="/keys" class="font-bold underline">Tạo khóa trước</NuxtLink>.</div>
         <div v-else-if="locked" class="pq-alert mt-4 text-sm">Kho khóa đang khóa. <NuxtLink to="/keys" class="font-bold underline">Mở kho khóa</NuxtLink> trước khi thao tác.</div>
-        <button class="mt-5 flex w-full items-center justify-center gap-3 rounded-[16px] bg-gradient-to-r from-[#096aff] to-[#0789ff] px-5 py-4 text-[17px] font-[800] text-white shadow-lg shadow-blue-200 disabled:from-[#a4b7d0] disabled:to-[#b4c4db]" :disabled="busy||!selected.length||!hasKey||locked||!!keyError||selected.some(f=>scanning[fileKey(f)]||safetyBusy[fileKey(f)]||!fileScan(f)||safetyScans[fileKey(f)]?.status==='blocked'||!safetyScans[fileKey(f)]||(safetyScans[fileKey(f)]?.status!=='clear'&&!acknowledgedWarnings[fileKey(f)]))" @click="upload"><LoaderCircle v-if="busy" :size="22" class="animate-spin"/><LockKeyhole v-else :size="22"/>{{busy?'Đang bảo vệ tệp...':'Mã hóa và tải lên'}}</button>
+        <button class="pq-upload-main-action mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#096aff] to-[#0789ff] px-4 py-3 text-[15px] font-[800] text-white shadow-md shadow-blue-100 disabled:from-[#a4b7d0] disabled:to-[#b4c4db]" :disabled="busy||!selected.length||!hasKey||locked||!!keyError||selected.some(f=>scanning[fileKey(f)]||safetyBusy[fileKey(f)]||!fileScan(f)||safetyScans[fileKey(f)]?.status==='blocked'||!safetyScans[fileKey(f)]||(safetyScans[fileKey(f)]?.status!=='clear'&&!acknowledgedWarnings[fileKey(f)]))" @click="upload"><LoaderCircle v-if="busy" :size="22" class="animate-spin"/><LockKeyhole v-else :size="22"/>{{busy?'Đang bảo vệ tệp...':'Mã hóa và tải lên'}}</button>
         <div v-if="busy||doneCount" class="mt-4 rounded-xl border border-blue-100 bg-blue-50 p-3" role="status" aria-live="polite">
           <div class="mb-2 flex justify-between gap-2 text-xs font-bold text-blue-800"><span>{{busy?'Đang mã hóa và tải lên':'Lượt mã hóa gần nhất'}}</span><span>{{doneCount}}/{{totalCount}} tệp · {{percent}}%</span></div>
           <div class="h-2 overflow-hidden rounded-full bg-blue-100"><div class="h-full rounded-full bg-gradient-to-r from-blue-600 to-sky-400 transition-all" :style="{width:percent+'%'}"/></div>
           <p v-if="progress" class="mt-2 text-xs text-[#225d9c]">{{progress}}</p>
         </div>
-        <div class="mt-4 rounded-2xl border border-blue-100 bg-blue-50 p-3 text-sm">
-          <div class="flex flex-wrap items-center justify-between gap-2"><span class="flex items-center gap-2 font-bold text-blue-900"><Gauge :size="19"/> So sánh hiệu năng ML-KEM trên thiết bị</span><button class="pq-icon-button" type="button" :disabled="benchmarking||busy" @click="compareKems">{{benchmarking?'Đang đo…':'Chạy đo thử'}}</button></div>
-          <p class="mt-1 text-xs text-slate-600">Đo thật thời gian tạo khóa, đóng gói và mở khóa (trung bình 3 vòng, ms). Không thay đổi kho khóa hiện tại.</p>
+        <details class="pq-upload-benchmark mt-3 rounded-xl border border-blue-100 bg-blue-50 p-3 text-sm">
+          <summary class="cursor-pointer font-bold text-blue-900"><Gauge :size="18" class="mr-1 inline"/> Đo hiệu năng ML-KEM (tùy chọn)</summary>
+          <div class="mt-2 flex flex-wrap items-center justify-between gap-2"><p class="max-w-md text-xs text-slate-600">Đo thời gian tạo khóa, đóng gói và mở khóa trên thiết bị (3 vòng). Không thay đổi khóa hiện tại.</p><button class="pq-icon-button" type="button" :disabled="benchmarking||busy" @click="compareKems">{{benchmarking?'Đang đo…':'Chạy đo thử'}}</button></div>
           <div v-if="benchmarks.length" class="pq-responsive-scroll mt-2 overflow-x-auto" tabindex="0" aria-label="Bảng so sánh hiệu năng ML-KEM, cuộn ngang nếu cần"><table class="w-full min-w-[420px] text-left text-xs"><thead><tr><th>Thuật toán</th><th>Sinh khóa</th><th>Đóng gói</th><th>Mở khóa</th></tr></thead><tbody><tr v-for="b in benchmarks" :key="b.algorithm"><td class="py-1 font-bold">{{b.algorithm}}</td><td>{{b.keygenMs}} ms</td><td>{{b.encapsMs}} ms</td><td>{{b.decapsMs}} ms</td></tr></tbody></table></div>
-        </div>
-        <div class="mt-5 flex items-center gap-3 rounded-[18px] bg-[#def7ee] px-4 py-4 text-[13px] font-medium text-[#143d52]"><LockKeyhole :size="28" class="shrink-0 text-green-700"/>Tệp được mã hóa trên thiết bị trước khi tải lên.</div>
+        </details>
+        <div class="pq-upload-safety-note mt-2 flex items-center gap-2 rounded-xl bg-[#e7f7f0] px-3 py-2 text-[12px] font-medium text-[#143d52]"><LockKeyhole :size="17" class="shrink-0 text-green-700"/>Nội dung tệp được mã hóa trên thiết bị trước khi tải lên.</div>
       </section>
     </div>
   </div>

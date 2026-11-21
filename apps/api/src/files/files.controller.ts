@@ -2,13 +2,14 @@ import { BadRequestException,Body,ConflictException,Controller,Delete,ForbiddenE
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { Response } from 'express';
 import { PutObjectCommand,GetObjectCommand,HeadBucketCommand,CreateBucketCommand,DeleteObjectCommand,S3Client } from '@aws-sdk/client-s3';
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { and,eq,isNull,desc,inArray } from 'drizzle-orm';
 import { z } from 'zod';
 import { DbService } from '../db/db.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { files,fileShares,recipients,userKeys,activityLogs,users,trustedRecipientKeys } from '../db/schema';
 import { readInput,recipientShape } from '../common/helpers';
+import { hasActiveGrantExpiration, readTimestamp } from '../common/runtime-safety';
 import { SecurityMonitorService } from '../security/security-monitor.service';
 const uploadShape=z.object({
   id:z.string().uuid(),displayLabel:z.string().min(1).max(160),iv:z.string().min(12).max(40),
@@ -50,7 +51,7 @@ export class FilesController {
     if(!f)throw new NotFoundException('Tệp không tồn tại');
     if(f.ownerId===userId)return f;
     const [share]=await this.svc.db.select().from(fileShares).where(and(eq(fileShares.fileId,fileId),eq(fileShares.sharedWith,userId),isNull(fileShares.revokedAt))).limit(1);
-    if(!share || (share.expiresAt && share.expiresAt.getTime()<=Date.now())){
+    if(!share || !hasActiveGrantExpiration(share.expiresAt)){
       await this.monitor.denied(userId,fileId).catch(()=>{});
       throw new ForbiddenException('Bạn không được cấp quyền truy cập');
     }
@@ -70,8 +71,8 @@ export class FilesController {
     const uid=req.user.id;
     const owned=await this.svc.db.select().from(files).where(and(eq(files.ownerId,uid),isNull(files.deletedAt),eq(files.status,'ACTIVE')));
     const grants=await this.svc.db.select({file:files,share:fileShares}).from(fileShares).innerJoin(files,eq(files.id,fileShares.fileId)).where(and(eq(fileShares.sharedWith,uid),isNull(fileShares.revokedAt),isNull(files.deletedAt),eq(files.status,'ACTIVE')));
-    const combined=[...owned,...grants.filter(g=>!g.share.expiresAt||g.share.expiresAt>new Date()).map(g=>g.file)].filter((f,i,a)=>a.findIndex(x=>x.id===f.id)===i);
-    combined.sort((a,b)=>b.createdAt.getTime()-a.createdAt.getTime());
+    const combined=[...owned,...grants.filter(g=>hasActiveGrantExpiration(g.share.expiresAt)).map(g=>g.file)].filter((f,i,a)=>a.findIndex(x=>x.id===f.id)===i);
+    combined.sort((a,b)=>(readTimestamp(b.createdAt)??0)-(readTimestamp(a.createdAt)??0));
     const cache=await this.recipientCache(uid,combined);
     return await Promise.all(combined.map(f=>this.toResponse(f,uid,cache)));
   }
@@ -90,8 +91,8 @@ export class FilesController {
         .from(fileShares).where(and(eq(fileShares.sharedBy,uid),isNull(fileShares.revokedAt)))
     ]);
     const now=Date.now();
-    const validIncoming=incoming.filter(r=>!r.share.expiresAt||r.share.expiresAt.getTime()>now);
-    const validOutgoing=outgoing.filter(r=>!r.expiresAt||r.expiresAt.getTime()>now);
+    const validIncoming=incoming.filter(r=>hasActiveGrantExpiration(r.share.expiresAt,now));
+    const validOutgoing=outgoing.filter(r=>hasActiveGrantExpiration(r.expiresAt,now));
     const outgoingByFile=new Map<string,number>();
     for(const s of validOutgoing)outgoingByFile.set(s.fileId,(outgoingByFile.get(s.fileId)||0)+1);
     // Lightweight library listing: never send per-file signatures, encrypted envelopes
@@ -161,7 +162,9 @@ export class FilesController {
     // Avoid overwriting an existing ciphertext object if a submitted file ID collides.
     const [existingFile]=await this.svc.db.select({id:files.id}).from(files).where(eq(files.id,data.id)).limit(1);
     if(existingFile)throw new ConflictException('Định danh tệp đã tồn tại');
-    const key=`ciphertext/${req.user.id}/${data.id}.bin`;
+    // Unique object key for each attempt prevents a concurrent duplicate file ID
+    // from overwriting another request's ciphertext. Cleanup removes ONLY our object.
+    const key=`ciphertext/${req.user.id}/${data.id}-${randomUUID()}.bin`;
     await this.ensureBucket();
     try {await this.s3.send(new PutObjectCommand({Bucket:this.bucket,Key:key,Body:file.buffer,ContentType:'application/octet-stream',Metadata:{sha256:hash}}));}
     catch(e){throw this.storageUnavailable('upload-ciphertext',e);}
@@ -221,7 +224,7 @@ export class FilesController {
     const [recipientAccount]=await this.svc.db.select({status:users.status}).from(users).where(eq(users.id,data.recipientId)).limit(1);
     if(!recipientAccount||recipientAccount.status!=='ACTIVE')throw new BadRequestException('Tài khoản người nhận không còn hoạt động');
     const [existing]=await this.svc.db.select().from(fileShares).where(and(eq(fileShares.fileId,id),eq(fileShares.sharedWith,data.recipientId))).limit(1);
-    if(existing && !existing.revokedAt && (!existing.expiresAt || existing.expiresAt.getTime()>Date.now()))throw new BadRequestException('Tệp đã được chia sẻ với người này');
+    if(existing && !existing.revokedAt && (hasActiveGrantExpiration(existing.expiresAt)))throw new BadRequestException('Tệp đã được chia sẻ với người này');
     await this.svc.db.transaction(async tx=>{
       const envelope={recipientKeyId:data.envelope.keyId,kemCiphertext:data.envelope.kemCiphertext,wrapIv:data.envelope.wrapIv,wrappedKey:data.envelope.wrappedKey,hybridEphemeralPublic:data.envelope.hybridEphemeralPublic||null,hybridSalt:data.envelope.hybridSalt||null};
       // Re-grants repair a missing envelope and rotate the recipient's wrapped CEK.

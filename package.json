@@ -14,7 +14,12 @@
     "build": "npm run build -w @pqfile/api && npm run build -w @pqfile/web",
     "test:crypto": "tsx tests/unit/crypto-roundtrip.ts",
     "test:preview-regressions": "node --experimental-strip-types --test tests/unit/preview-error-regressions.mjs",
+    "test:gateway-json": "node --experimental-strip-types --test tests/unit/gateway-json-response.test.mjs",
+    "test:api-runtime": "node --experimental-strip-types --test tests/unit/api-runtime-safety.test.mjs tests/unit/governance-dates.test.mjs",
     "test:pqc": "tsx tests/unit/pqc-advanced.ts",
+    "test:onboarding-advisor": "node --experimental-strip-types --test tests/unit/protection-advisor.test.mjs",
+    "test:onboarding-crypto": "node --experimental-strip-types tests/unit/onboarding-lab.ts",
+    "test:onboarding-crypto": "node --experimental-strip-types tests/unit/onboarding-lab.ts",
     "verify:receipt": "node scripts/verify-pqfile-receipt.mjs"
   },
   "engines": {

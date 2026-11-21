@@ -35,7 +35,7 @@ async function submit(){
         <div v-if="error" role="alert" class="pq-alert pq-alert-error">{{error}}</div>
         <button class="primary-button w-full" :disabled="busy||!matching" type="submit"><ShieldPlus :size="19"/>{{busy?'Đang tạo tài khoản...':'Tạo tài khoản'}}</button>
       </form>
-      <p class="mt-6 border-t border-blue-100 pt-5 text-center text-sm text-[#61789e]">Đã có tài khoản? <NuxtLink to="/login" class="font-bold text-blue-600 underline">Đăng nhập</NuxtLink></p>
+      <p class="mt-6 border-t border-blue-100 pt-5 text-center text-sm text-[#61789e]"><NuxtLink to="/onboarding" class="mb-3 block font-semibold text-blue-600 underline">Thử mô phỏng & kiểm tra trình duyệt trước khi đăng ký</NuxtLink>Đã có tài khoản? <NuxtLink to="/login" class="font-bold text-blue-600 underline">Đăng nhập</NuxtLink></p>
     </section>
   </div>
 </template>

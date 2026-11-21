@@ -36,7 +36,7 @@ async function refresh(){
     requestApi<any>('/pqc/rotation/plan'),requestApi<any>('/pqc/recovery'),requestApi<any[]>('/pqc/trust')
   ]);
   keyList.value=k;backup.value=b?.encryptedBlob||'';library.value=l.items||[];
-  rotation.value=r;recovery.value=rec;trusted.value=t;unlocked.value=!!getUnlockedVault();
+  rotation.value=r;recovery.value=rec?.configured && rec?.encryptedPayload ? rec : null;trusted.value=t;unlocked.value=!!getUnlockedVault();
  }catch(e){alert(e);}finally{loading.value=false;}
 }
 onMounted(()=>{if(typeof route.query.tab==='string'&&sections.some(s=>s.key===route.query.tab))tab.value=route.query.tab as typeof tab.value;void refresh();});

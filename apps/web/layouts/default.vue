@@ -3,7 +3,7 @@ import {
   ShieldCheck, Home, FolderClosed, Share2, FileUp, KeyRound, UsersRound,
   Clock3, ChevronDown, LogOut, Settings2,
   Menu, X, ShieldAlert, Network, BrainCircuit, Bell, Search, PanelLeftClose,
-  PanelLeftOpen, LockKeyhole, Atom
+  PanelLeftOpen, LockKeyhole, Atom, FlaskConical
 } from 'lucide-vue-next';
 
 const { user, logout } = useAuth();
@@ -30,6 +30,7 @@ const navigation = [
     { to: '/shared', label: 'Tệp được chia sẻ', icon: Share2 },
     { to: '/keys', label: 'Kho khóa mật mã', icon: KeyRound },
     { to: '/pqc', label: 'Mật mã nâng cao', icon: Atom },
+    { to: '/onboarding', label: 'Mô phỏng & tư vấn', icon: FlaskConical },
     { to: '/workspaces', label: 'Nhóm làm việc', icon: UsersRound }
   ] },
   { key: 'intelligence', title: 'AI & AN NINH', items: [
@@ -242,7 +243,7 @@ onUnmounted(() => {
         </div>
       </header>
       <main id="main-content" tabindex="-1" class="pq-layout-main"><slot/></main>
-      <footer v-if="!['/dashboard', '/workspaces', '/smart', '/security', '/governance', '/activity'].includes(route.path)" class="pq-layout-footer">PQFile Secure · Nghiên cứu mật mã hậu lượng tử · Tệp được mã hóa trên trình duyệt trước khi tải lên</footer>
+      <footer v-if="!['/dashboard', '/workspaces', '/smart', '/security', '/governance', '/activity', '/upload'].includes(route.path)" class="pq-layout-footer">PQFile Secure · Nghiên cứu mật mã hậu lượng tử · Tệp được mã hóa trên trình duyệt trước khi tải lên</footer>
     </div>
   </div>
 </template>
