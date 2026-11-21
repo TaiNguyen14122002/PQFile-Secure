@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
+import { buildShowcasePlan, DATASET_SHOWCASE, SHOWCASE_EMAIL, SHOWCASE_COUNTS } from '../../apps/api/scripts/demo-showcase-plan.mjs';
+import { generateFile } from '../../apps/api/scripts/realistic-file-builder.mjs';
+const t=[];const test=(name,fn)=>{fn();t.push(name);console.log('PASS',name);};
+const plan=buildShowcasePlan(new Date('2026-11-21T00:00:00Z'));
+test('One non-production demo account',()=>{assert.equal(SHOWCASE_EMAIL,'demo.showcase@pqfile.local');assert.equal(DATASET_SHOWCASE,'pqfile-showcase-account-2026-v1');});
+test('120 files, 96 owned, 24 incoming, 12 trashed',()=>{assert.equal(plan.files.length,120);assert.equal(plan.files.filter(f=>f.ownerIndex===0).length,96);assert.equal(plan.files.filter(f=>f.ownerIndex!==0).length,24);assert.equal(plan.files.filter(f=>f.trashed).length,12);});
+test('Eight valid file formats',()=>assert.equal(new Set(plan.files.map(f=>f.extension)).size,8));
+test('All IDs are distinct, UUID-like and file names <160 chars',()=>{const ids=plan.files.map(f=>f.id);assert.equal(new Set(ids).size,120);assert(ids.every(id=>/^[a-f0-9-]{36}$/.test(id)));assert(plan.files.every(f=>f.fileName.length<=160));});
+test('Grant lifecycle and recipients consistent',()=>{const byId=new Map(plan.files.map(f=>[f.id,f]));const unique=new Set();for(const grant of plan.grants){const f=byId.get(grant.fileId);assert(f);assert(!f.trashed);assert.equal(grant.ownerIndex,f.ownerIndex);assert.notEqual(grant.recipientIndex,grant.ownerIndex);if(grant.expiresAt)assert(new Date(grant.expiresAt)>new Date(grant.createdAt));if(grant.revokedAt)assert(new Date(grant.revokedAt)>new Date(grant.createdAt));const key=grant.fileId+':'+grant.recipientIndex;assert(!unique.has(key));unique.add(key);assert(new Date(grant.createdAt).getTime()<new Date('2026-11-22T00:00:00Z').getTime());}assert.equal(plan.grants.length,66);assert.equal(plan.grants.filter(g=>g.recipientIndex===0).length,24);});
+test('Six workspaces with showcase owner + members',()=>{assert.equal(plan.workspaces.length,6);assert(plan.workspaces.every(w=>w.members[0]===0&&new Set(w.members).size===4));});
+test('Activity references point to dataset files/workspaces',()=>{const ids=new Set([...plan.files.map(f=>f.id),...plan.workspaces.map(w=>w.id)]);assert.equal(plan.activities.length,253);assert(plan.activities.every(a=>ids.has(a.fileId)));});
+test('Security events have valid scores, synthetic labels, and unique IDs',()=>{assert.equal(plan.security.length,36);assert.equal(new Set(plan.security.map(e=>e.id)).size,36);assert(plan.security.every(e=>e.riskScore>=0&&e.riskScore<=100&&e.reason.includes('mô phỏng')));});
+test('Generated binary formats pass magic-byte checks',()=>{for(const ext of ['pdf','docx','xlsx','png','txt','csv','json','zip']){const f=plan.files.find(x=>x.extension===ext);const b=generateFile(f);assert(b.length>40);const magic=b.toString('latin1',0,8);if(ext==='pdf')assert(magic.startsWith('%PDF-'));if(['docx','xlsx','zip'].includes(ext))assert(magic.startsWith('PK'));if(ext==='png')assert.equal(b.toString('hex',0,8),'89504e470d0a1a0a');}});
+test('Same fixed reference -> stable IDs for safe retry',()=>{const again=buildShowcasePlan(new Date('2026-11-21T00:00:00Z'));assert.deepEqual(again.files.map(f=>f.id),plan.files.map(f=>f.id));});
+console.log(`OK: ${t.length}/${t.length} tests`);

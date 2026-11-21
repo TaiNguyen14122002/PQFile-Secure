@@ -1,0 +1,5 @@
+{
+  "name":"@pqfile/crypto-core","version":"0.2.0","type":"module",
+  "exports":{".":"./src/index.ts"},"dependencies":{"@noble/post-quantum":"^0.7.1","hash-wasm":"^4.12.0"},
+  "scripts":{"test":"echo 'Crypto test vectors require dependency installation; see tests/unit/crypto.test.ts'"}
+}

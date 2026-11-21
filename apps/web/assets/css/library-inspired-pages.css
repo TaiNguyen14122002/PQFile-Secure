@@ -1,0 +1,355 @@
+/* PQFile Secure — unified library-inspired layout for all OTHER pages.
+   Reference: /files (banner -> workspace toolbar -> white panels -> inner-scroll list).
+   Intentionally never target .file-portal or files.vue. */
+.pq-app-shell .pq-library-pattern{
+  --pq-lib-ink:#11285f;
+  --pq-lib-muted:#5b7398;
+  --pq-lib-border:#d2e4fa;
+  --pq-lib-surface:#fff;
+  --pq-lib-light:#f6faff;
+  --pq-lib-blue:#0968f3;
+  --pq-lib-radius:20px;
+  color:var(--pq-lib-ink);
+  min-width:0;
+}
+.pq-app-shell .pq-container.pq-library-pattern{
+  width:calc(100% - clamp(24px,2.5vw,44px));
+  max-width:1696px;
+  margin-inline:auto;
+}
+.pq-app-shell .pq-library-pattern.pq-ops-page{
+  display:flex;
+  flex-direction:column;
+  gap:clamp(10px,1.1vw,15px)!important;
+  padding-block:clamp(11px,1.35vw,19px)!important;
+}
+.pq-app-shell .pq-library-pattern.pq-ops-page > * {min-width:0;}
+.pq-app-shell .pq-library-pattern.pq-ops-page > * + * {margin-block-start:0!important;}
+
+/* Library file page uses a LIGHT heading: white -> pale blue, not a solid blue banner. */
+.pq-app-shell .pq-library-pattern .pq-page-heading{
+  position:relative;isolation:isolate;overflow:hidden;
+  min-height:110px;
+  padding:clamp(17px,1.7vw,25px)!important;
+  display:flex;align-items:center;gap:clamp(12px,1.7vw,23px);
+  border:1px solid #e2eaf5;border-radius:20px;
+  background:linear-gradient(125deg,#fff 0%,#f3f8ff 100%)!important;
+  box-shadow:0 4px 16px rgba(17,73,154,.045)!important;
+  color:#172b4d!important;
+}
+.pq-app-shell .pq-library-pattern .pq-page-heading::before{
+  display:none;
+}
+.pq-app-shell .pq-library-pattern .pq-page-heading .pq-heading-icon{
+  display:grid;place-items:center;flex:none;
+  width:60px;height:60px;border-radius:18px;
+  background:linear-gradient(140deg,#ecf7ff,#dceaff);color:#126ce3;
+  border:1px solid #dfecfb;box-shadow:none;
+}
+.pq-app-shell .pq-library-pattern .pq-page-heading .pq-heading-icon svg{width:33px;height:33px}
+.pq-app-shell .pq-library-pattern .pq-heading-eyebrow{color:#6281a8;font-size:10px;letter-spacing:.10em;font-weight:830}
+.pq-app-shell .pq-library-pattern .pq-page-heading h1{color:#12305f;font-size:clamp(22px,2.2vw,32px);line-height:1.18;letter-spacing:-.03em;font-weight:850}
+.pq-app-shell .pq-library-pattern .pq-heading-description{color:#61738f;font-size:clamp(12px,1vw,14px);line-height:1.5;max-width:860px;margin-top:6px}
+.pq-app-shell .pq-library-pattern .pq-heading-actions{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto;justify-content:flex-end}
+.pq-app-shell .pq-library-pattern .pq-page-heading .pq-heading-actions :is(a,button){
+  display:inline-flex;gap:8px;align-items:center;justify-content:center;
+  min-height:42px;padding:9px 13px;background:#126de3;color:#fff;border:1px solid #176cda;
+  border-radius:12px;box-shadow:0 3px 9px rgba(17,90,187,.13);font-size:12px;font-weight:800;
+}
+.pq-app-shell .pq-library-pattern .pq-page-heading .pq-heading-actions :is(a,button):hover{background:#0757c1;color:#fff;}
+
+/* White library panels and the same restrained blue outline. */
+.pq-app-shell .pq-library-pattern .soft-card,
+.pq-app-shell .pq-library-pattern .pq-dashboard-panel{
+  min-width:0;background:linear-gradient(160deg,#fff,#fafdff);
+  border:1px solid var(--pq-lib-border);
+  border-radius:var(--pq-lib-radius);
+  box-shadow:0 6px 19px rgba(17,73,154,.065);
+}
+.pq-app-shell .pq-library-pattern .pq-ops-panel{padding:clamp(15px,1.6vw,23px)!important;}
+.pq-app-shell .pq-library-pattern .pq-ops-panel-head,
+.pq-app-shell .pq-library-pattern .pq-section-head{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding-bottom:11px;margin-bottom:13px;border-bottom:1px solid #e0ebf9;
+}
+.pq-app-shell .pq-library-pattern .pq-ops-panel-head h2,
+.pq-app-shell .pq-library-pattern .pq-section-head h2{
+  color:var(--pq-lib-ink);font-size:clamp(17px,1.3vw,21px);letter-spacing:-.02em;
+}
+.pq-app-shell .pq-library-pattern .pq-ops-panel-head p{margin-top:4px;color:var(--pq-lib-muted);font-size:12px;line-height:1.45}
+.pq-app-shell .pq-library-pattern .pq-ops-stats,
+.pq-app-shell .pq-library-pattern .pq-refined-workspaces > .grid,
+.pq-app-shell .pq-library-pattern .pq-refined-activity > .grid{gap:11px}
+.pq-app-shell .pq-library-pattern .pq-ops-stat,
+.pq-app-shell .pq-library-pattern .pq-kpi-mini,
+.pq-app-shell .pq-library-pattern.pq-refined-governance > .grid > .soft-card,
+.pq-app-shell .pq-library-pattern.pq-refined-smart > template + .grid > .soft-card{
+  background:linear-gradient(130deg,#fff,#f3f9ff);
+  border:1px solid #d4e6fa;border-radius:15px;
+  box-shadow:0 3px 12px rgba(18,81,158,.045);
+}
+.pq-app-shell .pq-library-pattern .pq-ops-stat{min-height:90px}
+.pq-app-shell .pq-library-pattern .pq-ops-stat strong,
+.pq-app-shell .pq-library-pattern .pq-kpi-mini strong{font-size:clamp(23px,2vw,31px);color:#0b51b7}
+.pq-app-shell .pq-library-pattern .pq-field{
+  background:#fff;border:1px solid #ccdef8;border-radius:12px;
+  min-height:43px;color:#15346b;box-shadow:0 1px 3px #154fa009;
+}
+.pq-app-shell .pq-library-pattern .pq-field:focus-visible{outline:3px solid #acd9ff;outline-offset:1px;border-color:#1672e9}
+.pq-app-shell .pq-library-pattern .form-label{color:#425e87;font-weight:750}
+.pq-app-shell .pq-library-pattern .pq-icon-button,
+.pq-app-shell .pq-library-pattern .pq-outline-button{
+  border-radius:11px;min-height:42px;border-color:#d2e4fc;
+  background:#f5faff;color:#0e57c0;font-weight:760;
+}
+.pq-app-shell .pq-library-pattern .pq-icon-button:hover:not(:disabled){background:#e7f3ff;border-color:#8ec3fa}
+.pq-app-shell .pq-library-pattern :is(button,a,input,select,textarea):focus-visible{
+  outline:3px solid #57a8ff;outline-offset:2px;
+}
+.pq-app-shell .pq-library-pattern .pq-ops-filter-grid{
+  padding:11px 12px;border-radius:15px;
+  border:1px solid #e0ecfb;background:#f7fbff;
+  margin-bottom:9px;
+}
+.pq-app-shell .pq-library-pattern .pq-ops-toolbar{padding:5px 3px 9px;color:#4a6894}
+.pq-app-shell .pq-library-pattern .pq-ops-pagination,
+.pq-app-shell .pq-library-pattern .pq-activity-pagination{
+  flex:none;border-top:1px solid #e1edfa;padding:12px 2px 2px;margin-top:10px;
+  background:#fff;color:#47658d;
+}
+.pq-app-shell .pq-library-pattern .pq-ops-record,
+.pq-app-shell .pq-library-pattern .pq-ops-grant,
+.pq-app-shell .pq-library-pattern .pq-smart-file-entry{
+  border:1px solid #e0eafa;border-radius:13px;background:#fff;
+}
+.pq-app-shell .pq-library-pattern .pq-ops-record{margin-bottom:0}
+.pq-app-shell .pq-library-pattern .pq-compact-activity-list>li{padding:14px!important}
+.pq-app-shell .pq-library-pattern .pq-empty{background:#f7fbff;border:1px dashed #d0e6ff;border-radius:13px}
+.pq-app-shell .pq-library-pattern .pq-ops-info{border:1px solid #d7e8ff;border-radius:14px;background:#edf6ff;color:#244b7c}
+
+/* Governance tabs match the category tabs of the library. */
+.pq-app-shell .pq-library-pattern.pq-refined-governance [role="tablist"]{
+  display:flex;flex-wrap:wrap;gap:8px;
+  padding:1px 3px;min-height:49px;
+}
+.pq-app-shell .pq-library-pattern.pq-refined-governance [role="tablist"] [role="tab"]{
+  min-height:44px;padding:9px 16px;border-radius:13px;border:1px solid transparent;
+  font-weight:800;color:#174b93;background:transparent;
+}
+.pq-app-shell .pq-library-pattern.pq-refined-governance [role="tablist"] [role="tab"][aria-selected="true"]{
+  background:linear-gradient(145deg,#148dff,#0856e7)!important;
+  color:#fff!important;border-color:#1476ef!important;box-shadow:0 5px 11px rgba(0,92,217,.18);
+}
+.pq-app-shell .pq-library-pattern.pq-refined-governance [role="tablist"] [role="tab"]:hover:not([aria-selected="true"]){background:#e8f3ff}
+
+/* Workspace: two framed, independently scrolling panes at desktop widths. */
+.pq-app-shell .pq-library-pattern.pq-refined-workspaces .pq-ops-workspace-layout{min-width:0;align-items:stretch}
+.pq-app-shell .pq-library-pattern.pq-refined-workspaces .pq-ops-workspace-layout > section{min-width:0}
+.pq-app-shell .pq-library-pattern.pq-refined-workspaces .pq-ops-member-list,
+.pq-app-shell .pq-library-pattern.pq-refined-workspaces .pq-ops-group-list{
+  scrollbar-width:thin;scrollbar-color:#aacaf0 transparent;overscroll-behavior:contain;
+}
+/* Smart: search and index manager use the same two-pane document-library split. */
+.pq-app-shell .pq-library-pattern.pq-refined-smart .pq-smart-content-grid{gap:12px}
+.pq-app-shell .pq-library-pattern.pq-refined-smart .pq-smart-main-column{min-width:0}
+.pq-app-shell .pq-library-pattern.pq-refined-smart .pq-ops-smart-list{
+  scrollbar-width:thin;scrollbar-color:#aacaf0 transparent;overscroll-behavior:contain;
+}
+.pq-app-shell .pq-library-pattern.pq-refined-smart .pq-smart-file-entry{padding:11px 10px;margin-bottom:6px}
+.pq-app-shell .pq-library-pattern.pq-refined-smart .pq-smart-file-entry:hover{background:#f3f9ff}
+.pq-app-shell .pq-library-pattern.pq-refined-smart .pq-smart-index-panel .pq-ops-panel-head{align-items:flex-start}
+
+/* Upload matches the shared hero + two white panels without changing encryption logic. */
+.pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-hero{
+  max-width:1696px;min-height:110px;margin:clamp(11px,1.35vw,19px) auto 0;
+  padding:clamp(15px,2vw,25px);border:1px solid #e2eaf5;border-radius:20px;
+  background:linear-gradient(125deg,#fff 0%,#f3f8ff 100%);color:#172b4d;
+  box-shadow:0 4px 16px rgba(17,73,154,.045);
+}
+.pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-hero-icon{
+  width:60px;height:60px;flex:none;border-radius:17px;
+  background:linear-gradient(140deg,#ecf7ff,#dceaff);border-color:#dfecfb;color:#126ce3;
+}
+.pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-hero-eyebrow{color:#6281a8}
+.pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-hero h1{color:#12305f;font-weight:850}
+.pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-hero-copy>p:last-child{color:#61738f}
+.pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-hero-steps span{
+  border:1px solid #d2e4fa;background:#fff;color:#245c9d;
+}
+.pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-layout{
+  max-width:1696px;padding:clamp(10px,1.35vw,18px);
+  gap:clamp(11px,1.35vw,18px);
+}
+.pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-layout > section{border-radius:20px}
+.pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-layout > section > div:first-child{
+  border-color:#e0edfa;gap:12px;
+}
+.pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-dropzone{
+  min-height:clamp(205px,28vh,285px);background:#f3f9ff;
+  border-color:#a3ccf8;border-radius:17px;
+}
+
+/* Key vault: display complete information using the same library card system. */
+.pq-app-shell .pq-library-pattern.pq-refined-keys .pq-keys-columns{gap:13px;align-items:stretch}
+.pq-app-shell .pq-library-pattern.pq-refined-keys .pq-keys-columns>section{height:100%}
+.pq-app-shell .pq-library-pattern.pq-refined-keys{max-width:1696px}
+
+/* Dashboard: align the hero and statistics panels to the same content grid. */
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-hero{
+  max-width:1696px;margin:clamp(11px,1.35vw,19px) auto 0;
+  border:1px solid #e2eaf5;border-radius:20px;
+  background:linear-gradient(125deg,#fff 0%,#f3f8ff 100%);
+  color:#172b4d;box-shadow:0 4px 16px rgba(17,73,154,.045);
+}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-hero-inner{padding:clamp(20px,2.1vw,30px)}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-hero :is(.pq-dashboard-hero-swoop,.pq-dashboard-hero-glow){display:none}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-hero-title{color:#12305f;text-shadow:none}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-hero-title span{color:#126de3}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-hero-lead{color:#61738f;text-shadow:none}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-research-label{border-color:#d2e4fa;background:#f3f9ff;color:#335c89}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-pill{border-color:#d2e4fa;background:#fff;color:#245c9d;box-shadow:none}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-quick-primary{border:1px solid #176cda;background:#126de3;color:#fff}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-quick-primary:hover{background:#0757c1}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-quick-secondary{border:1px solid #d2e4fa;background:#fff;color:#0e57c0}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-quick-secondary:hover{background:#e7f3ff}
+
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-hero-title{font-size:clamp(29px,3vw,44px)}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-hero-lead{font-size:clamp(13px,1.1vw,16px)}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-container{max-width:1696px}
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-stat,
+.pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-panel{
+  border:1px solid #d2e4fa;border-radius:19px;background:linear-gradient(155deg,#fff,#f8fbff);
+  box-shadow:0 6px 17px rgba(17,73,154,.06);
+}
+
+/* Public auth pages retain their own two-column form semantics but visually match library. */
+.pq-app-shell .pq-library-pattern.pq-auth-layout{max-width:1180px;gap:15px}
+.pq-app-shell .pq-library-pattern.pq-auth-layout .pq-auth-intro{
+  border:1px solid #e2eaf5;border-radius:20px;
+  background:linear-gradient(125deg,#fff 0%,#f3f8ff 100%);color:#12305f;
+  box-shadow:0 4px 16px rgba(17,73,154,.045);
+}
+.pq-app-shell .pq-library-pattern.pq-auth-layout>.soft-card{
+  border:1px solid #d2e4fa;border-radius:20px;background:#fff;
+}
+.pq-app-shell .pq-library-pattern.pq-auth-layout .pq-auth-intro:after{display:none}
+.pq-app-shell .pq-library-pattern.pq-auth-layout .pq-auth-eyebrow{border-color:#d2e4fa;background:#eaf4ff;color:#42658e}
+.pq-app-shell .pq-library-pattern.pq-auth-layout .pq-auth-intro .text-blue-50{color:#61738f}
+.pq-app-shell .pq-library-pattern.pq-auth-layout .pq-auth-intro .border-white\/30{border-color:#d9e7f8}
+
+
+/* Standard-height windows use a bounded list inside normally scrolling pages.
+   This avoids hiding actions when the user has a short laptop display. */
+.pq-app-shell .pq-library-pattern.pq-refined-governance .pq-compact-grants,
+.pq-app-shell .pq-library-pattern.pq-refined-security .pq-compact-security-list,
+.pq-app-shell .pq-library-pattern.pq-refined-activity .pq-compact-activity-list,
+.pq-app-shell .pq-library-pattern.pq-refined-smart .pq-ops-smart-list,
+.pq-app-shell .pq-library-pattern.pq-refined-workspaces :is(.pq-ops-group-list,.pq-ops-member-list){
+  max-height:min(620px,56dvh);overflow-y:auto;overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:#a9c7ee transparent;
+}
+
+/* Fixed chrome + independent content scrolling on spacious desktop windows.
+   Never trap scroll on phones, tablets or short-height laptop windows. */
+@media (min-width:1024px) and (min-height:1100px){
+  .pq-app-shell .pq-library-pattern.pq-ops-page{
+    height:calc(100dvh - var(--pq-topbar-height,70px));
+    min-height:0;overflow:hidden;
+  }
+  .pq-app-shell .pq-library-pattern.pq-ops-page>.pq-page-heading,
+  .pq-app-shell .pq-library-pattern.pq-ops-page>.pq-ops-stats,
+  .pq-app-shell .pq-library-pattern.pq-ops-page>.grid:not(.pq-ops-workspace-layout):not(.pq-smart-content-grid),
+  .pq-app-shell .pq-library-pattern.pq-ops-page>[role="tablist"]{
+    flex:none;
+  }
+  .pq-app-shell .pq-library-pattern.pq-refined-security>.pq-ops-panel,
+  .pq-app-shell .pq-library-pattern.pq-refined-activity>.pq-ops-panel,
+  .pq-app-shell .pq-library-pattern.pq-refined-governance>.pq-ops-panel{
+    display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;
+  }
+  .pq-app-shell .pq-library-pattern.pq-refined-security :is(.pq-compact-security-list,.pq-ops-loading,.pq-empty),
+  .pq-app-shell .pq-library-pattern.pq-refined-activity :is(.pq-compact-activity-list,.pq-empty),
+  .pq-app-shell .pq-library-pattern.pq-refined-governance :is(.pq-compact-grants,.pq-graph-viewport){
+    min-height:0;flex:1;overflow:auto;overscroll-behavior:contain;
+    scrollbar-width:thin;scrollbar-color:#a9c7ee transparent;
+  }
+  .pq-app-shell .pq-library-pattern.pq-refined-security .pq-compact-security-list,
+  .pq-app-shell .pq-library-pattern.pq-refined-activity .pq-compact-activity-list,
+  .pq-app-shell .pq-library-pattern.pq-refined-governance .pq-compact-grants{align-content:start;}
+  .pq-app-shell .pq-library-pattern.pq-refined-security .pq-ops-pagination,
+  .pq-app-shell .pq-library-pattern.pq-refined-governance .pq-ops-pagination{margin-top:9px}
+  .pq-app-shell .pq-library-pattern.pq-refined-smart>.pq-smart-content-grid,
+  .pq-app-shell .pq-library-pattern.pq-refined-workspaces>.pq-ops-workspace-layout{
+    flex:1;min-height:0;align-items:stretch;overflow:hidden;
+    grid-template-rows:minmax(0,1fr);
+  }
+  .pq-app-shell .pq-library-pattern.pq-refined-smart .pq-smart-main-column{
+    min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-right:3px;
+    scrollbar-width:thin;scrollbar-color:#a9c7ee transparent;
+  }
+  .pq-app-shell .pq-library-pattern.pq-refined-smart .pq-smart-index-panel{
+    display:flex;flex-direction:column;min-height:0;overflow:hidden;
+  }
+  .pq-app-shell .pq-library-pattern.pq-refined-smart .pq-ops-smart-list{
+    flex:1;min-height:0;max-height:none;overflow:auto;align-content:start;
+  }
+  .pq-app-shell .pq-library-pattern.pq-refined-workspaces .pq-ops-workspace-layout > section{
+    display:flex;flex-direction:column;min-height:0;height:100%;align-self:stretch;overflow:hidden;
+  }
+  .pq-app-shell .pq-library-pattern.pq-refined-workspaces :is(.pq-ops-group-list,.pq-ops-member-list){
+    flex:1;max-height:none;min-height:0;overflow:auto;
+    scrollbar-width:thin;scrollbar-color:#a9c7ee transparent;
+  }
+  .pq-app-shell .pq-library-pattern.pq-refined-workspaces .pq-ops-workspace-layout > section > .pq-ops-group-controls,
+  .pq-app-shell .pq-library-pattern.pq-refined-workspaces .pq-ops-workspace-layout > section > .pq-ops-member-filters{flex:none;}
+
+}
+
+/* Compact screens: preserve reading order and use full-width touch targets. */
+@media (max-width:1023px){
+  .pq-app-shell .pq-library-pattern .pq-page-heading{min-height:0;}
+  .pq-app-shell .pq-library-pattern.pq-ops-page{height:auto;overflow:visible}
+  .pq-app-shell .pq-library-pattern .pq-ops-panel{overflow:visible}
+}
+@media (max-width:740px){
+  .pq-app-shell .pq-container.pq-library-pattern{width:calc(100% - 22px)}
+  .pq-app-shell .pq-library-pattern .pq-page-heading{padding:15px!important;gap:11px;border-radius:16px}
+  .pq-app-shell .pq-library-pattern .pq-page-heading .pq-heading-icon{width:47px;height:47px;border-radius:13px}
+  .pq-app-shell .pq-library-pattern .pq-page-heading .pq-heading-icon svg{width:25px;height:25px}
+  .pq-app-shell .pq-library-pattern .pq-page-heading h1{font-size:clamp(19px,5.1vw,26px)}
+  .pq-app-shell .pq-library-pattern .pq-heading-description{font-size:12px;line-height:1.45}
+  .pq-app-shell .pq-library-pattern .pq-heading-actions{width:100%;display:flex;justify-content:stretch}
+  .pq-app-shell .pq-library-pattern .pq-page-heading .pq-heading-actions :is(a,button){flex:1 1 150px;min-width:0}
+  .pq-app-shell .pq-library-pattern .pq-ops-panel{padding:14px!important;border-radius:16px}
+  .pq-app-shell .pq-library-pattern .pq-ops-panel-head,
+  .pq-app-shell .pq-library-pattern .pq-section-head{align-items:flex-start;flex-wrap:wrap}
+  .pq-app-shell .pq-library-pattern .pq-ops-panel-head>.pq-ops-actions{width:100%;justify-content:stretch;flex-wrap:wrap}
+  .pq-app-shell .pq-library-pattern .pq-ops-panel-head>.pq-ops-actions>button{flex:1}
+  .pq-app-shell .pq-library-pattern .pq-ops-filter-grid{grid-template-columns:minmax(0,1fr);padding:10px}
+  .pq-app-shell .pq-library-pattern .pq-ops-pagination{flex-wrap:wrap;gap:9px}
+  .pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-hero{
+    margin:11px 11px 0;padding:15px;align-items:flex-start;flex-direction:column;gap:12px;border-radius:16px;
+  }
+  .pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-hero-icon{width:47px;height:47px;border-radius:12px}
+  .pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-hero-main{gap:12px}
+  .pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-hero h1{font-size:clamp(20px,5.3vw,27px)}
+  .pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-hero-steps{justify-content:flex-start;max-width:100%;gap:6px}
+  .pq-app-shell .pq-library-pattern.pq-refined-upload .pq-upload-hero-steps span{font-size:10px;padding:6px 8px}
+  .pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-hero{margin:11px 11px 0;border-radius:16px}
+  .pq-app-shell .pq-library-pattern.pq-refined-dashboard .pq-dashboard-hero-inner{padding:17px}
+  .pq-app-shell .pq-library-pattern.pq-auth-layout{gap:11px}
+  .pq-app-shell .pq-library-pattern.pq-auth-layout .pq-auth-intro{border-radius:16px;min-height:160px;padding:19px}
+}
+@media (max-width:440px){
+  .pq-app-shell .pq-library-pattern .pq-page-heading{display:grid;grid-template-columns:45px minmax(0,1fr)}
+  .pq-app-shell .pq-library-pattern .pq-page-heading .pq-heading-actions{grid-column:1/-1}
+  .pq-app-shell .pq-library-pattern .pq-page-heading .pq-heading-actions>*{width:100%}
+  .pq-app-shell .pq-library-pattern .pq-ops-stats{gap:8px}
+  .pq-app-shell .pq-library-pattern .pq-ops-stat{min-height:79px;padding:10px}
+  .pq-app-shell .pq-library-pattern .pq-ops-filter-grid{gap:8px}
+  .pq-app-shell .pq-library-pattern .pq-ops-record{padding:10px}
+  .pq-app-shell .pq-library-pattern.pq-refined-governance [role="tablist"] [role="tab"]{flex:1;justify-content:center;min-width:0;padding-inline:9px}
+}
+@media (prefers-reduced-motion:reduce){
+  .pq-app-shell .pq-library-pattern :is(button,a){transition:none!important}
+}

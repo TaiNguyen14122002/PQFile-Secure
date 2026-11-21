@@ -1,0 +1,5 @@
+{
+  "name": "@pqfile/worker", "version": "0.1.0", "private": true,
+  "description": "Reserved BullMQ job service; not deployed in MVP",
+  "scripts": {"dev": "echo Worker planned for next milestone"}
+}

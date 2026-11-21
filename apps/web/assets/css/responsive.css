@@ -1,0 +1,172 @@
+/* PQFile Secure — adaptive layout across 320px phones, tablets and wide monitors.
+   Kept separate from existing visual styles so the original design is preserved. */
+:root{--pq-header-height:70px;--pq-edge:clamp(12px,2vw,36px)}
+html{min-width:320px;scroll-padding-top:calc(var(--pq-header-height) + 12px)}
+body,#__nuxt{min-width:320px;width:100%;min-height:100%}
+.pq-app-shell{min-width:320px;overflow-x:clip}
+.pq-app-shell>main{min-width:0;width:100%}
+.pq-app-shell .pq-container{width:min(calc(100% - (2 * var(--pq-edge))),1680px);margin-inline:auto}
+.pq-app-shell main :is(.grid,.flex)>:is(section,article,div,aside){min-width:0}
+.pq-app-shell :is(.soft-card,.pq-modal-card,.pq-alert,.pq-empty){overflow-wrap:anywhere}
+.pq-app-shell :is(input,textarea,select){max-width:100%;min-width:0}
+.pq-app-shell textarea{height:auto;min-height:90px}
+.pq-app-shell img{max-width:100%}
+.pq-app-shell :is(.pq-icon-button,.pq-outline-button,.primary-button){max-width:100%;text-align:center;white-space:normal;line-height:1.35}
+.pq-app-shell :is(.pq-page-heading,.pq-list-entry,.pq-section-head){min-width:0}
+.pq-page-heading .pq-heading-actions{max-width:100%}
+.pq-page-heading .pq-heading-actions :is(a,button){min-height:42px;white-space:normal;text-align:center}
+.pq-modal-overlay{overscroll-behavior:contain;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+.pq-modal-card{width:min(100%,900px);max-width:min(100%,900px);max-height:calc(100dvh - 24px);overscroll-behavior:contain}
+.pq-auth-layout{width:min(calc(100% - (2 * var(--pq-edge))),1160px)}
+/* Navigation switches before nine links would overlap the logo and account. */
+.pq-topbar{z-index:65;min-width:0}
+.pq-topbar .pq-brand{min-width:0}
+.pq-topbar .pq-brand-copy{min-width:0}
+.pq-topbar-actions{min-width:0}
+.pq-topbar .pq-desktop-nav>a{min-width:0}
+.pq-menu-button{display:grid;place-items:center;min-width:44px;min-height:44px}
+.pq-nav-backdrop{position:fixed;inset:var(--pq-header-height) 0 0;z-index:55;width:100%;background:rgba(3,25,62,.43);border:0;cursor:default}
+.pq-mobile-navigation{position:fixed;z-index:60;top:var(--pq-header-height);left:0;right:0;width:100%;max-height:calc(100dvh - var(--pq-header-height));overflow-y:auto;overscroll-behavior:contain;padding:clamp(10px,1.5vw,18px) max(12px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));scrollbar-gutter:stable}
+.pq-mobile-navigation .pq-mobile-link{min-width:0;min-height:46px;overflow-wrap:anywhere}
+.pq-mobile-navigation .pq-mobile-link svg{flex-shrink:0}
+.pq-mobile-navigation .pq-mobile-link[aria-current="page"]{background:#086cf7;color:#fff}
+/* Long or structured content should only scroll in its own named region. */
+.pq-responsive-scroll,.pq-graph-viewport{max-width:100%;overscroll-behavior-inline:contain;scrollbar-width:thin}
+.pq-responsive-scroll:focus-visible,.pq-graph-viewport:focus-visible{outline:3px solid #248af6;outline-offset:2px}
+.pq-graph-svg{display:block;max-width:none;transform-origin:top left}
+.pq-upload-layout>section{min-width:0}
+.pq-upload-parameter{width:min(190px,100%);min-width:0}
+.pq-upload-layout .pq-upload-dropzone{min-width:0}
+.pq-upload-layout .pq-upload-dropzone button{max-width:100%}
+.pq-workspace-member .pq-field{min-width:0}
+/* dashboard graphs remain inside their cards at every breakpoint. */
+.pq-dashboard :is(.pq-dashboard-charts,.pq-dashboard-bottom,.pq-dashboard-stats)>*{min-width:0}
+.pq-dashboard :is(.pq-dashboard-panel,.pq-dashboard-stat){max-width:100%}
+.pq-dashboard svg{max-width:100%}
+@media (min-width:1536px){
+ .pq-topbar{gap:8px;padding-inline:clamp(16px,1.5vw,32px)}
+ .pq-desktop-nav{gap:0}
+ .pq-desktop-nav a{font-size:12px}
+}
+@media (min-width:1920px){
+ .pq-topbar{padding-inline:clamp(28px,2vw,58px)}
+ .pq-desktop-nav a{font-size:13px;padding-inline:13px}
+ .pq-dashboard-container{max-width:1760px;margin-inline:auto}
+ .pq-app-shell .pq-container{width:min(calc(100% - (2 * var(--pq-edge))),1760px)}
+}
+@media (max-width:1535px){
+ .pq-topbar{height:auto;min-height:var(--pq-header-height)}
+ .pq-brand-title{font-size:20px}
+ .pq-mobile-navigation{grid-template-columns:repeat(3,minmax(0,1fr));max-width:740px;right:0;left:auto;border-radius:0 0 0 18px}
+ .pq-desktop-nav{display:none}
+}
+@media (max-width:900px){
+ .pq-mobile-navigation{grid-template-columns:repeat(2,minmax(0,1fr));max-width:600px}
+ .pq-page-heading{gap:14px;padding:22px}
+ .pq-heading-actions{margin-left:0}
+ .pq-page-heading .pq-heading-actions :is(button,a){padding:10px 12px}
+ .pq-dashboard-charts,.pq-dashboard-bottom{gap:12px}
+ .pq-auth-layout{gap:14px}
+}
+@media (max-width:740px){
+ .pq-topbar{padding-inline:var(--pq-edge)}
+ .pq-mobile-navigation{max-width:100%;border-radius:0}
+ .pq-app-shell .pq-container{width:min(calc(100% - 24px),1680px)}
+ .pq-page-heading{gap:10px}
+ .pq-page-heading h1{font-size:clamp(22px,5.5vw,32px)}
+ .pq-page-heading .pq-heading-description{font-size:13px;line-height:1.5}
+ .pq-auth-layout{width:min(calc(100% - 24px),580px);padding-block:20px}
+ .pq-auth-intro{min-height:156px;padding:20px}
+ .pq-auth-intro h1{font-size:22px;line-height:1.25}
+ .pq-auth-intro :is(.text-3xl,.text-4xl){font-size:23px}
+ .pq-auth-layout .soft-card{padding:21px}
+ .pq-upload-layout{padding-inline:12px;gap:12px}
+ .pq-upload-layout .pq-upload-dropzone{min-height:270px;padding:20px 12px;border-radius:17px}
+ .pq-upload-layout .pq-upload-dropzone .pq-upload-cloud{width:72px;height:72px}
+ .pq-upload-layout .pq-upload-dropzone p{font-size:clamp(13px,3.6vw,18px)}
+ .pq-upload-layout .pq-upload-dropzone p.text-\[25px\]{font-size:clamp(19px,5vw,25px)}
+ .pq-upload-layout .pq-upload-picker{font-size:15px;min-width:0}
+ .pq-upload-parameter{width:100%}
+ .pq-upload-layout .pq-upload-dropzone input{max-width:100%}
+ .pq-dashboard-stats{gap:10px}
+ .pq-dashboard-stat{min-width:0}
+ .pq-dashboard-feature-list{gap:7px}
+ .pq-dashboard .pq-dashboard-panel-head{flex-wrap:wrap}
+ .pq-dashboard .pq-dashboard-type-list{min-width:0}
+ .pq-dashboard .pq-dashboard-bar-frame{padding-left:26px}
+ .pq-dashboard .pq-dashboard-bar-columns{gap:5px}
+ .pq-list-entry{gap:10px}
+ .pq-workspace-member .pq-field{height:42px}
+ .pq-security-entry .pq-icon-button{min-height:44px}
+}
+@media (max-width:580px){
+ .pq-mobile-navigation{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .pq-mobile-navigation .pq-mobile-link{font-size:12px;padding:10px 9px}
+ .pq-topbar .pq-brand{gap:7px}
+ .pq-topbar .pq-brand>div:first-child{width:39px;height:39px;border-radius:13px}
+ .pq-topbar .pq-brand>div:first-child svg{width:25px;height:25px}
+ .pq-topbar .pq-brand-title{font-size:18px;letter-spacing:-.7px;white-space:nowrap}
+ .pq-topbar .pq-brand-copy>p:last-child{display:none}
+ .pq-topbar-actions{gap:4px}
+ .pq-topbar-actions>div button{gap:3px}
+ .pq-topbar-actions .rounded-full{width:35px;height:35px}
+ .pq-page-heading{display:grid;grid-template-columns:46px minmax(0,1fr);padding:18px 14px;border-radius:16px;align-items:start}
+ .pq-heading-icon{width:46px;height:46px;border-radius:13px}
+ .pq-heading-icon svg{width:26px;height:26px}
+ .pq-page-heading .pq-heading-actions{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,125px),1fr));width:100%;gap:7px}
+ .pq-page-heading .pq-heading-actions>*{min-width:0}
+ .pq-page-heading h1{font-size:clamp(19px,5.2vw,25px);line-height:1.24;overflow-wrap:anywhere}
+ .pq-heading-eyebrow{font-size:9px;letter-spacing:.12em}
+ .pq-page-heading .pq-heading-description{font-size:12px}
+ .pq-section-head{align-items:flex-start}
+ .pq-section-head h2{font-size:17px}
+ .pq-modal-card{padding:18px 14px;border-radius:17px;max-height:calc(100dvh - 20px)}
+ .pq-modal-overlay{padding:10px}
+ .pq-app-shell :is(.pq-icon-button,.pq-outline-button,.primary-button){overflow-wrap:anywhere}
+ .pq-app-shell :is(.pq-kpi-mini,.pq-stat){min-width:0;padding:13px}
+ .pq-app-shell .pq-kpi-mini strong{font-size:23px}
+ .pq-dashboard-panel{padding:12px}
+ .pq-dashboard .pq-dashboard-event-list li{gap:8px}
+ .pq-dashboard .pq-dashboard-donut-layout{flex-direction:column;gap:10px}
+ .pq-dashboard .pq-dashboard-type-list{width:100%}
+ .pq-upload-layout .pq-upload-parameter{flex-basis:100%;width:100%}
+ .pq-upload-layout .pq-field{max-width:100%}
+ .pq-workspace-create .primary-button{min-width:76px}
+ .pq-activity-entry{flex-wrap:wrap}
+ .pq-activity-entry .pq-activity-time{flex:0 0 100%;margin-left:54px;text-align:left}
+ .pq-smart-file-entry>span.flex-1{flex-basis:calc(100% - 34px)}
+ .pq-smart-index-all{width:100%}
+ .pq-security-entry .pq-icon-button{margin-left:auto}
+}
+@media (max-width:400px){
+ .pq-topbar .pq-brand-title{font-size:16px}
+ .pq-topbar .pq-brand>div:first-child{width:36px;height:36px;border-width:2px}
+ .pq-mobile-navigation{grid-template-columns:minmax(0,1fr);gap:5px}
+ .pq-mobile-navigation .pq-mobile-link{min-height:44px;font-size:13px}
+ .pq-dashboard .pq-dashboard-stats{grid-template-columns:minmax(0,1fr)}
+ .pq-dashboard .pq-dashboard-stat{flex-direction:row;min-height:84px;align-items:center;padding:11px 13px}
+ .pq-dashboard .pq-dashboard-stat-icon{width:46px;height:46px}
+ .pq-dashboard .pq-dashboard-stat strong{font-size:25px}
+ .pq-dashboard .pq-dashboard-hero-title{font-size:clamp(30px,9vw,36px)}
+ .pq-dashboard-feature-list .pq-dashboard-pill{max-width:100%}
+ .pq-dashboard-bar-column>span{font-size:9px;line-height:1.1;white-space:normal}
+ .pq-page-heading .pq-heading-actions{grid-template-columns:minmax(0,1fr)}
+ .pq-page-heading .pq-heading-actions :is(a,button){width:100%}
+ .pq-workspace-create>label{flex-basis:100%}
+ .pq-workspace-create>.primary-button{width:100%}
+ .pq-upload-layout .pq-upload-dropzone{min-height:238px}
+ .pq-upload-layout .pq-upload-dropzone .pq-upload-cloud{width:58px;height:58px}
+ .pq-auth-layout .soft-card{padding:17px}
+ .pq-auth-intro{padding:17px}
+ .pq-auth-intro .text-3xl{font-size:20px}
+ .pq-activity-entry .pq-activity-time{margin-left:0}
+ .pq-smart-file-entry .pq-icon-button{flex:1}
+}
+@media (max-height:580px) and (min-width:700px) and (max-width:1535px){
+ .pq-mobile-navigation{grid-template-columns:repeat(3,minmax(0,1fr));font-size:12px}
+ .pq-mobile-navigation .pq-mobile-link{min-height:42px;padding-block:7px}
+ .pq-modal-overlay{align-items:start}
+}
+@media (prefers-reduced-motion:reduce){
+ .pq-mobile-navigation,.pq-nav-backdrop{transition:none}
+}

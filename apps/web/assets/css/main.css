@@ -1,0 +1,105 @@
+@import "tailwindcss";
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#0c1757;background:#f4f7fc;--pq-workspace-background:#f4f7fc;--pq-campus-image:url("/campus-background-hd.webp")}
+*{box-sizing:border-box}
+body{margin:0;min-width:320px;background:var(--pq-workspace-background)}
+button,select,input{font:inherit}
+button:not(:disabled){cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.6}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #38bdf8;outline-offset:2px}
+.soft-card{background:linear-gradient(138deg,rgba(255,255,255,.98),rgba(249,252,255,.97));border:1px solid rgba(160,197,235,.55);box-shadow:0 9px 25px rgba(9,85,172,.13),0 2px 7px rgba(35,84,150,.07);border-radius:27px}
+.primary-button{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:999px;padding:12px 27px;background:linear-gradient(180deg,#1688ff,#0754e9);color:white;font-weight:750;box-shadow:0 4px 8px #006ee641;transition:transform .15s,box-shadow .15s}
+.primary-button:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 8px 16px #006ee640}
+.pq-field{width:100%;height:43px;padding:0 14px;border:1px solid #d1def1;border-radius:13px;background:linear-gradient(180deg,#f9fbff,#f5f9fe);outline:none;color:#0b1555;box-shadow:0 2px 5px #0b3d8f0b}
+.pq-field:focus{border-color:#1688ff;box-shadow:0 0 0 3px #1397fd21}
+.form-label{display:block;font-size:13px;font-weight:750;margin-bottom:7px;color:#132365}
+.pq-alert{border:1px solid #bddafb;border-radius:13px;background:#eff8ff;padding:12px 15px;color:#0d4b94}
+.pq-alert-error{border-color:#fecaca;background:#fff1f2;color:#9f1239}
+.pq-alert-success{border-color:#a7f3d0;background:#e9f9f4;color:#047857}
+.table-row-light:nth-child(odd){background:rgba(232,245,255,.4)}
+.fade-enter-active,.fade-leave-active{transition:opacity .18s}.fade-enter-from,.fade-leave-to{opacity:0}
+/* Shared professional, mobile-first components */
+.pq-container{width:min(100% - 32px,1360px);margin-inline:auto}
+.pq-eyebrow{font-size:11px;font-weight:850;letter-spacing:.18em;color:#1274da}
+.pq-page-title{display:flex;align-items:center;gap:10px;font-size:clamp(1.65rem,3vw,2.2rem);font-weight:850;letter-spacing:-.035em;color:#102656}
+.pq-page-subtitle{margin-top:5px;color:#5b6e91;font-size:14px}
+.pq-stat{display:flex;flex-direction:column;gap:3px;border:1px solid #d8e8fa;border-radius:20px;background:#fff;padding:16px 20px;box-shadow:0 4px 15px #14599c12}
+.pq-stat strong{font-size:29px;color:#102c65;font-weight:850;line-height:1.25}
+.pq-tab{border-radius:11px;padding:9px 13px;font-size:13px;font-weight:750;color:#4d6287;background:#f3f7fc;border:1px solid transparent;transition:background .15s}
+.pq-tab:hover{background:#e6f0fc}.pq-tab-active{background:#096de8!important;color:white;box-shadow:0 3px 10px #207bed2b}
+.pq-action{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;border-radius:10px;padding:7px;transition:background .15s}
+.pq-action:hover:not(:disabled){background:#e6f1fe}
+.pq-modal-overlay{position:fixed;inset:0;z-index:60;display:grid;align-items:center;justify-items:center;overflow-y:auto;background:#081a3ca8;padding:20px 12px;backdrop-filter:blur(3px)}
+.pq-modal-card{width:100%;max-height:calc(100dvh - 40px);overflow-y:auto;border-radius:24px;background:#fff;padding:clamp(20px,4vw,28px);box-shadow:0 30px 85px #03142d70}
+@media(max-width:640px){.soft-card{border-radius:20px}.pq-modal-overlay{align-items:start}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+/* Unified neutral canvas: matches the Files library (#f4f7fc).
+   Campus photography remains available to intentional page hero/banner components,
+   but no longer sits behind every workspace screen. */
+.pq-app-shell{position:relative;isolation:isolate;min-height:100dvh;background:var(--pq-workspace-background)}
+.pq-app-shell::before,.pq-app-shell::after{content:none}
+.pq-layout-frame,.pq-layout-main,.pq-layout-footer{background:transparent}
+.pq-app-shell>header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(14px)}
+.pq-app-shell>main{min-height:calc(100dvh - 145px)}
+.pq-app-shell .soft-card,.pq-app-shell .pq-stat{background:rgba(255,255,255,.96)}
+.pq-app-shell .pq-modal-card{background:rgba(255,255,255,.98)}
+.pq-app-shell .pq-container{position:relative}
+.pq-research-tag{display:inline-flex;align-items:center;border:1px solid #c3ddf5;border-radius:7px;
+ padding:1px 6px;background:#eaf5ff;color:#23578a;font-size:10px;font-weight:800;letter-spacing:.01em}
+/* The same neutral background applies on small screens. */
+
+/* 2026 research-edition UI consistency pass */
+:root{--pq-navy:#0b2468;--pq-blue:#086cf7;--pq-border:#cfe2f7;--pq-shadow:0 12px 35px rgba(7,70,146,.13)}
+html{scroll-behavior:smooth}
+body{line-height:1.5}
+button,a{-webkit-tap-highlight-color:transparent}
+a{text-underline-offset:3px}
+.pq-page-heading{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:24px clamp(18px,3.5vw,34px);color:#fff;border-radius:26px;background:linear-gradient(112deg,rgba(5,64,170,.89),rgba(3,117,230,.70)),var(--pq-campus-image) center 51% / cover;border:1px solid #a2cef8;box-shadow:var(--pq-shadow);overflow:hidden}
+.pq-page-heading h1{font-size:clamp(1.6rem,3.3vw,2.3rem);font-weight:850;letter-spacing:-.035em;line-height:1.18}
+.pq-heading-eyebrow{color:#c9ebff;font-size:11px;font-weight:900;letter-spacing:.16em;margin-bottom:5px}
+.pq-heading-description{margin-top:8px;max-width:720px;color:#ecf7ff;font-size:14px}
+.pq-heading-icon{display:grid;place-items:center;width:64px;height:64px;flex-shrink:0;border:1px solid #a8d6ff88;border-radius:20px;background:#ffffff28;box-shadow:inset 0 1px 2px #ffffff45}
+.pq-heading-actions{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.pq-page-heading .pq-heading-actions button,.pq-page-heading .pq-heading-actions a{display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid #b8e2ff99;border-radius:12px;background:#ffffffee;color:#064caa;font-size:13px;font-weight:750;transition:.15s}
+.pq-page-heading .pq-heading-actions button:hover,.pq-page-heading .pq-heading-actions a:hover{background:white;transform:translateY(-1px)}
+.pq-section-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.pq-section-head h2{font-size:19px;font-weight:850;color:#142c70;letter-spacing:-.02em}
+.pq-icon-button{display:inline-flex;justify-content:center;align-items:center;gap:7px;min-height:40px;padding:8px 12px;border:1px solid #cfe2f8;border-radius:12px;background:#f7fbff;color:#0754c7;font-size:13px;font-weight:750;transition:.15s}
+.pq-icon-button:not(:disabled):hover{background:#e9f4ff;border-color:#93c6fa}
+.pq-icon-button.danger{color:#bf2149;background:#fff5f7;border-color:#ffd6df}
+.pq-icon-button.danger:hover:not(:disabled){background:#ffe5eb}
+.pq-outline-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:10px 16px;border:1px solid #bed8f5;border-radius:13px;background:#f4f9ff;color:#0b58c4;font-size:13px;font-weight:800}
+.pq-outline-button:hover{background:#e5f3ff}
+.pq-field:disabled{background:#eff3f8;color:#71829c}
+.pq-empty{display:grid;justify-items:center;gap:10px;padding:44px 18px;text-align:center;color:#62799e}
+.pq-empty h3{color:#16356f;font-weight:850;font-size:17px}
+.pq-empty p{max-width:490px;font-size:13px}
+.pq-kpi-mini{border:1px solid #d7e8f9;border-radius:16px;padding:14px;background:linear-gradient(130deg,#fff,#f4f9ff)}
+.pq-kpi-mini strong{display:block;font-size:26px;line-height:1.1;color:#0b3a92;font-weight:850}
+.pq-kpi-mini span{display:block;margin-top:5px;font-size:12px;color:#5e779d}
+.pq-list-entry{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid #e3edf8}
+.pq-list-entry:last-child{border-bottom:none}
+.pq-skeleton{animation:pq-pulse 1.4s ease-in-out infinite alternate;background:linear-gradient(90deg,#e4effa,#f5faff,#e4effa);background-size:200% 100%;border-radius:10px}
+@keyframes pq-pulse{to{background-position:100% 0}}
+.pq-link-active{background:#e4f2ff;color:#0057d9}
+.pq-app-shell .soft-card{box-shadow:var(--pq-shadow)}
+.pq-app-shell>header{box-shadow:0 3px 15px #06357921}
+/* Ensure dropdowns/menus and modals stay readable over the large background. */
+.pq-modal-card{isolation:isolate}
+@media(max-width:640px){.pq-page-heading{border-radius:19px;gap:12px;padding:20px 17px}.pq-heading-icon{width:52px;height:52px;border-radius:14px}.pq-heading-actions{width:100%;margin-left:0}.pq-page-heading .pq-heading-actions>*{flex:1;justify-content:center}}
+.pq-skip-link{position:fixed;z-index:100;top:-100px;left:12px;padding:10px 15px;background:#fff;color:#0758d4;font-weight:800;border:2px solid #0a64fa;border-radius:8px}
+.pq-skip-link:focus{top:8px}
+/* Authentication routes retain the campus image through the shared application shell. */
+.pq-auth-layout{display:grid;grid-template-columns:1.08fr minmax(0,.92fr);align-items:stretch;gap:20px;max-width:1160px;min-height:min(680px,calc(100dvh - 190px))}
+.pq-auth-intro{display:flex;align-items:center;position:relative;isolation:isolate;overflow:hidden;min-height:500px;padding:clamp(24px,4vw,46px);color:white;border-radius:26px;background:linear-gradient(135deg,rgba(4,43,130,.90),rgba(0,119,240,.62)),var(--pq-campus-image) center / cover;box-shadow:var(--pq-shadow)}
+.pq-auth-intro:after{content:'';position:absolute;z-index:-1;right:-90px;bottom:-130px;width:350px;height:350px;border:45px solid #ffffff20;border-radius:50%}
+.pq-auth-eyebrow{display:inline-flex;padding:5px 10px;border:1px solid #a8deff66;border-radius:999px;background:#ffffff22;color:#def6ff;font-size:11px;font-weight:850;letter-spacing:.12em}
+@media(max-width:850px){.pq-auth-layout{grid-template-columns:1fr;max-width:580px;min-height:0}.pq-auth-intro{min-height:185px;padding:24px}.pq-auth-intro h1{font-size:23px}.pq-auth-intro .space-y-3{display:none}}
+
+/* A single, sharp campus photo is painted by the layout on every route.
+   The dashboard only changes the tint for readable white hero text; it does
+   not paint a second, blurry/stretched photo or a second statistics background. */
+.pq-app-shell--dashboard::after{background:linear-gradient(105deg,rgba(2,48,131,.86) 0%,rgba(3,77,161,.64) 55%,rgba(2,69,138,.46) 100%)}
+@media(max-width:700px){
+ .pq-app-shell--dashboard::after{background:linear-gradient(115deg,rgba(2,48,131,.88),rgba(2,66,144,.62))}
+}

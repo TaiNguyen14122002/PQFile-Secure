@@ -1,0 +1,23 @@
+{
+  "name": "pqfile-secure",
+  "private": true,
+  "version": "0.2.0",
+  "workspaces": [
+    "apps/web",
+    "apps/api",
+    "apps/worker",
+    "packages/crypto-core"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev -w @pqfile/web",
+    "dev:api": "npm run dev -w @pqfile/api",
+    "build": "npm run build -w @pqfile/api && npm run build -w @pqfile/web",
+    "test:crypto": "tsx tests/unit/crypto-roundtrip.ts",
+    "test:preview-regressions": "node --experimental-strip-types --test tests/unit/preview-error-regressions.mjs",
+    "test:pqc": "tsx tests/unit/pqc-advanced.ts",
+    "verify:receipt": "node scripts/verify-pqfile-receipt.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

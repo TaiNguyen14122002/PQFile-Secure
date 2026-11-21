@@ -1,0 +1,234 @@
+/* PQFile Secure — adaptive density and usable-space pass (November 2026).
+ * The approved /files library is intentionally excluded. Every selector is scoped
+ * to .pq-space-optimized, a class applied only to the other page roots.
+ * Container breakpoints measure the REAL content area after the sidebar.
+ */
+.pq-app-shell .pq-space-optimized {
+  --pq-opt-gap: clamp(9px, .85vw, 14px);
+  --pq-opt-pad: clamp(12px, 1.2vw, 19px);
+  min-width: 0;
+}
+.pq-app-shell .pq-container.pq-space-optimized:not(.pq-auth-layout) {
+  width: calc(100% - clamp(22px, 2vw, 36px));
+  max-width: 1840px;
+}
+.pq-app-shell .pq-space-optimized.pq-ops-page {
+  gap: var(--pq-opt-gap) !important;
+  padding-block: 10px 18px !important;
+  container-type: inline-size;
+}
+.pq-app-shell .pq-space-optimized.pq-ops-page > * + * { margin-block-start: 0 !important; }
+.pq-app-shell .pq-space-optimized .pq-page-heading {
+  min-height: 0;
+  padding: clamp(12px, 1.25vw, 18px) !important;
+  gap: 12px;
+  border-radius: 16px;
+}
+.pq-app-shell .pq-space-optimized .pq-page-heading .pq-heading-icon {
+  width: 48px; height: 48px; border-radius: 13px;
+}
+.pq-app-shell .pq-space-optimized .pq-page-heading .pq-heading-icon svg { width: 26px; height: 26px; }
+.pq-app-shell .pq-space-optimized .pq-page-heading h1 { font-size: clamp(20px, 1.8vw, 28px); }
+.pq-app-shell .pq-space-optimized .pq-heading-description { margin-top: 3px; font-size: 12px; line-height: 1.4; }
+.pq-app-shell .pq-space-optimized .pq-heading-actions { gap: 6px; }
+.pq-app-shell .pq-space-optimized .pq-heading-actions :is(a,button) { min-height: 38px; padding: 7px 11px; }
+.pq-app-shell .pq-space-optimized .soft-card,
+.pq-app-shell .pq-space-optimized .pq-dashboard-panel { border-radius: 15px; }
+.pq-app-shell .pq-space-optimized .pq-ops-panel { padding: var(--pq-opt-pad) !important; }
+.pq-app-shell .pq-space-optimized .pq-ops-panel-head,
+.pq-app-shell .pq-space-optimized .pq-section-head { margin-bottom: 9px; padding-bottom: 8px; }
+.pq-app-shell .pq-space-optimized .pq-ops-panel-head h2,
+.pq-app-shell .pq-space-optimized .pq-section-head h2 { font-size: clamp(16px, 1.3vw, 19px); }
+.pq-app-shell .pq-space-optimized .pq-ops-panel-head p { font-size: 11px; }
+.pq-app-shell .pq-space-optimized .pq-ops-stats,
+.pq-app-shell .pq-space-optimized > .grid { gap: var(--pq-opt-gap); }
+.pq-app-shell .pq-space-optimized .pq-ops-stat,
+.pq-app-shell .pq-space-optimized .pq-kpi-mini {
+  min-height: 76px; padding: 10px 14px; border-radius: 13px;
+}
+.pq-app-shell .pq-space-optimized .pq-ops-stat strong,
+.pq-app-shell .pq-space-optimized .pq-kpi-mini strong { font-size: clamp(23px, 2vw, 28px); line-height: 1.15; }
+.pq-app-shell .pq-space-optimized .pq-ops-stat p { font-size: 11px; }
+.pq-app-shell .pq-space-optimized .pq-ops-stat small { font-size: 10px; }
+.pq-app-shell .pq-space-optimized .pq-ops-stat-icon { width: 31px; height: 31px; right: 10px; top: 10px; }
+.pq-app-shell .pq-space-optimized .pq-ops-stat-icon svg { width: 18px; height: 18px; }
+.pq-app-shell .pq-space-optimized .pq-ops-filter-grid { gap: 8px; padding: 9px; margin-bottom: 6px; }
+.pq-app-shell .pq-space-optimized .pq-ops-toolbar { padding-block: 4px 7px; }
+.pq-app-shell .pq-space-optimized .pq-field { min-height: 40px; height: auto; }
+.pq-app-shell .pq-space-optimized .pq-ops-list { gap: 8px; padding-block: 9px; }
+.pq-app-shell .pq-space-optimized .pq-ops-record { padding: 11px; gap: 9px; }
+.pq-app-shell .pq-space-optimized .pq-ops-record-icon { width: 37px; height: 37px; border-radius: 10px; }
+.pq-app-shell .pq-space-optimized .pq-ops-record-body p { font-size: 12px; line-height: 1.45; }
+.pq-app-shell .pq-space-optimized .pq-ops-pagination,
+.pq-app-shell .pq-space-optimized .pq-activity-pagination { margin-top: 8px; padding-top: 8px; }
+.pq-app-shell .pq-space-optimized .pq-empty { padding: 20px 12px; }
+.pq-app-shell .pq-space-optimized .pq-ops-info { padding: 10px 12px; }
+/* The two-column records are intentionally not equal-height; short entries don't
+   stretch to the tallest card in the same row. */
+.pq-app-shell .pq-space-optimized.pq-refined-governance .pq-compact-grants,
+.pq-app-shell .pq-space-optimized.pq-refined-security .pq-compact-security-list,
+.pq-app-shell .pq-space-optimized.pq-refined-activity .pq-compact-activity-list {
+  gap: 9px; align-content: start; align-items: start;
+}
+.pq-app-shell .pq-space-optimized.pq-refined-governance .pq-compact-grants > .pq-ops-grant,
+.pq-app-shell .pq-space-optimized.pq-refined-security .pq-compact-security-list > li,
+.pq-app-shell .pq-space-optimized.pq-refined-activity .pq-compact-activity-list > li { height: auto; min-height: 0; }
+.pq-app-shell .pq-space-optimized.pq-refined-governance .pq-compact-grants > .pq-ops-grant { padding: 11px !important; }
+.pq-app-shell .pq-space-optimized.pq-refined-activity .pq-compact-activity-list > li { padding: 10px !important; }
+.pq-app-shell .pq-space-optimized.pq-refined-activity .pq-activity-entry .pq-activity-time { max-width: 128px; }
+.pq-app-shell .pq-space-optimized.pq-refined-security .pq-ops-record-button { margin-inline-start: auto; }
+/* Groups: narrower selector column, denser entries, more room for members. */
+.pq-app-shell .pq-space-optimized.pq-refined-workspaces .pq-ops-workspace-layout {
+  grid-template-columns: minmax(0, 1fr); gap: 10px; align-items: start;
+}
+.pq-app-shell .pq-space-optimized.pq-refined-workspaces .pq-ops-workspace-layout > section { min-width: 0; height: auto; }
+.pq-app-shell .pq-space-optimized.pq-refined-workspaces .pq-ops-group-list { margin-top: 10px; }
+.pq-app-shell .pq-space-optimized.pq-refined-workspaces .pq-ops-group-list > button { padding: 9px 10px; }
+.pq-app-shell .pq-space-optimized.pq-refined-workspaces .pq-ops-group-list > button > span:first-child { width: 34px; height: 34px; }
+.pq-app-shell .pq-space-optimized.pq-refined-workspaces .pq-ops-member { padding-block: 8px; }
+/* Local search and encrypted index: balanced side-by-side panels. */
+.pq-app-shell .pq-space-optimized.pq-refined-smart .pq-smart-content-grid {
+  grid-template-columns: minmax(0, 1fr); gap: 10px; align-items: start;
+}
+.pq-app-shell .pq-space-optimized.pq-refined-smart .pq-smart-main-column { gap: 10px; }
+.pq-app-shell .pq-space-optimized.pq-refined-smart .pq-smart-file-entry { padding-block: 8px; }
+.pq-app-shell .pq-space-optimized.pq-refined-smart .pq-ops-smart-list { max-height: min(580px, 60dvh); }
+/* Use actual workspace width (not browser width) for the layout transitions. */
+@container (min-width: 760px) {
+  .pq-space-optimized.pq-refined-workspaces .pq-ops-workspace-layout {
+    grid-template-columns: minmax(232px, 30%) minmax(0, 1fr) !important;
+  }
+  .pq-space-optimized.pq-refined-workspaces .pq-ops-group-controls { grid-template-columns: minmax(0,1fr); }
+  .pq-space-optimized.pq-refined-activity .pq-compact-activity-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+@container (min-width: 870px) {
+  .pq-space-optimized.pq-refined-smart .pq-smart-content-grid {
+    grid-template-columns: minmax(0, 1.12fr) minmax(350px, .88fr) !important;
+  }
+  .pq-space-optimized.pq-refined-security .pq-compact-security-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+@container (min-width: 920px) {
+  .pq-space-optimized.pq-refined-governance .pq-compact-grants { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+/* Do not force fixed-height application panes: their inner lists scroll at a
+   reasonable max-height, but empty datasets no longer create giant blanks. */
+@media (min-width: 1024px) and (min-height: 1100px) {
+  .pq-app-shell .pq-space-optimized.pq-ops-page { height: auto; overflow: visible; }
+  .pq-app-shell .pq-space-optimized.pq-refined-security > .pq-ops-panel,
+  .pq-app-shell .pq-space-optimized.pq-refined-activity > .pq-ops-panel,
+  .pq-app-shell .pq-space-optimized.pq-refined-governance > .pq-ops-panel { display: block; overflow: visible; }
+  .pq-app-shell .pq-space-optimized.pq-refined-smart > .pq-smart-content-grid,
+  .pq-app-shell .pq-space-optimized.pq-refined-workspaces > .pq-ops-workspace-layout {
+    flex: none; overflow: visible; grid-template-rows: auto; align-items: start;
+  }
+  .pq-app-shell .pq-space-optimized.pq-refined-smart .pq-smart-main-column,
+  .pq-app-shell .pq-space-optimized.pq-refined-smart .pq-smart-index-panel,
+  .pq-app-shell .pq-space-optimized.pq-refined-workspaces .pq-ops-workspace-layout > section {
+    height: auto; min-height: 0; overflow: visible;
+  }
+}
+.pq-app-shell .pq-space-optimized.pq-refined-governance .pq-compact-grants,
+.pq-app-shell .pq-space-optimized.pq-refined-security .pq-compact-security-list,
+.pq-app-shell .pq-space-optimized.pq-refined-activity .pq-compact-activity-list,
+.pq-app-shell .pq-space-optimized.pq-refined-workspaces :is(.pq-ops-group-list, .pq-ops-member-list) {
+  max-height: min(590px, 64dvh); overflow-y: auto; overscroll-behavior: contain;
+}
+/* Dashboard: reduce empty hero area and build balanced chart rows. */
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-hero-inner { padding: 16px clamp(16px, 1.7vw, 26px) !important; }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-hero-title { font-size: clamp(27px, 2.8vw, 39px); }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-hero-lead { margin-top: 6px; line-height: 1.4; }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-feature-list,
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-quick-actions { margin-top: 10px; }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-statistics .pq-dashboard-container { padding-top: 10px; padding-bottom: 16px; }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-stats,
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-charts,
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-bottom { gap: 10px; }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-stat {
+  min-height: 88px; gap: 11px; padding: 12px; border-radius: 14px;
+}
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-stat-icon { width: 44px; height: 44px; border-radius: 12px; }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-stat-icon svg { width: 25px; height: 25px; }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-panel {
+  min-height: 0; padding: 13px; border-radius: 15px;
+}
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-panel-head h2 { font-size: clamp(15px, 1.3vw, 18px); }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-donut-layout { min-height: 125px; margin-top: 8px; }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-donut { width: clamp(112px, 9vw, 144px); height: clamp(112px, 9vw, 144px); }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-type-list { gap: 7px; }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-bar-frame { height: 147px; margin-top: 8px; }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-charts { grid-template-columns: minmax(0, 1fr); }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-bottom { grid-template-columns: minmax(0, 1fr); }
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-security,
+.pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-activity { grid-column: auto; }
+@media (min-width: 1000px) {
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-charts,
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-bottom { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-monthly,
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-activity { grid-column: 1 / -1; }
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-security .space-y-5 {
+    display: block;
+  }
+}
+@media (min-width: 1680px) {
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-charts {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-monthly { grid-column: auto; }
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-bottom {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-activity { grid-column: auto; }
+}
+/* Upload: drop zone and settings should share the workspace when there is room. */
+.pq-app-shell .pq-space-optimized.pq-refined-upload { container-type: inline-size; }
+.pq-app-shell .pq-space-optimized.pq-refined-upload .pq-upload-hero { min-height: 0; margin-top: 10px; padding: 14px 18px; }
+.pq-app-shell .pq-space-optimized.pq-refined-upload .pq-upload-layout { grid-template-columns: minmax(0, 1fr); padding: 10px 14px 18px; gap: 10px; }
+.pq-app-shell .pq-space-optimized.pq-refined-upload .pq-upload-dropzone { min-height: clamp(170px, 24dvh, 230px); }
+@container (min-width: 900px) {
+  .pq-app-shell .pq-space-optimized.pq-refined-upload .pq-upload-layout {
+    grid-template-columns: minmax(0, 1.12fr) minmax(300px, .88fr);
+  }
+}
+/* Vault: avoid an oversized blank side panel on large displays. */
+.pq-app-shell .pq-space-optimized.pq-refined-keys { container-type: inline-size; }
+.pq-app-shell .pq-space-optimized.pq-refined-keys .pq-keys-columns { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.pq-app-shell .pq-space-optimized.pq-refined-keys .pq-keys-columns > section {
+  height: auto; min-height: 0; align-self: start; padding: clamp(13px, 1.3vw, 20px);
+}
+@container (min-width: 850px) {
+  .pq-app-shell .pq-space-optimized.pq-refined-keys .pq-keys-columns {
+    grid-template-columns: minmax(0, 1.06fr) minmax(0, .94fr);
+  }
+}
+/* Public authentication: no enormous, mostly empty marketing pane. */
+.pq-app-shell .pq-space-optimized.pq-auth-layout { min-height: 0; padding-block: clamp(14px, 2.3vw, 32px); }
+.pq-app-shell .pq-space-optimized.pq-auth-layout .pq-auth-intro { min-height: clamp(260px, 42dvh, 440px); }
+.pq-app-shell .pq-space-optimized.pq-auth-layout > .soft-card { padding: clamp(17px, 2.2vw, 31px); }
+/* Tablet/mobile: stacks remain uncluttered, controls remain touch-friendly. */
+@media (max-width: 1023px) {
+  .pq-app-shell .pq-space-optimized.pq-ops-page { padding-block: 9px 18px !important; }
+  .pq-app-shell .pq-space-optimized.pq-refined-smart .pq-smart-content-grid { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 700px) {
+  .pq-app-shell .pq-container.pq-space-optimized:not(.pq-auth-layout) { width: calc(100% - 20px); }
+  .pq-app-shell .pq-space-optimized .pq-page-heading { padding: 12px !important; }
+  .pq-app-shell .pq-space-optimized .pq-page-heading .pq-heading-icon { width: 41px; height: 41px; }
+  .pq-app-shell .pq-space-optimized .pq-page-heading h1 { font-size: clamp(19px, 4.7vw, 24px); }
+  .pq-app-shell .pq-space-optimized .pq-ops-panel { padding: 12px !important; }
+  .pq-app-shell .pq-space-optimized .pq-ops-stat { min-height: 76px; }
+  .pq-app-shell .pq-space-optimized .pq-ops-stat-icon { width: 29px; height: 29px; }
+  .pq-app-shell .pq-space-optimized .pq-ops-record { flex-wrap: wrap; }
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-charts,
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-bottom { grid-template-columns: minmax(0,1fr); }
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-monthly,
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-activity { grid-column: auto; }
+  .pq-app-shell .pq-space-optimized.pq-refined-upload .pq-upload-layout { padding-inline: 10px; }
+  .pq-app-shell .pq-space-optimized.pq-auth-layout .pq-auth-intro { min-height: 0; }
+}
+@media (max-width: 390px) {
+  .pq-app-shell .pq-space-optimized .pq-ops-filter-grid { grid-template-columns: minmax(0, 1fr); }
+  .pq-app-shell .pq-space-optimized .pq-ops-stat strong { font-size: 23px; }
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-stat { min-height: 83px; flex-direction: row; }
+  .pq-app-shell .pq-space-optimized.pq-refined-dashboard .pq-dashboard-stat-icon { width: 37px; height: 37px; }
+}

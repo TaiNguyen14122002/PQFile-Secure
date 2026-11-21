@@ -1,0 +1,27 @@
+{
+  "name": "@pqfile/web",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev --host 0.0.0.0",
+    "build": "nuxt build",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@pqfile/crypto-core": "0.2.0",
+    "@tailwindcss/vite": "^4.1.0",
+    "tailwindcss": "^4.1.0",
+    "nuxt": "^4.2.0",
+    "vue": "^3.5.0",
+    "lucide-vue-next": "^0.468.0",
+    "pdfjs-dist": "5.4.624",
+    "markdown-it": "^14.1.0",
+    "qrcode":"^1.5.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "@types/markdown-it": "^14.1.2",
+    "@types/qrcode":"^1.5.5"
+  }
+}

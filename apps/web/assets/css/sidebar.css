@@ -1,0 +1,165 @@
+/* PQFile Secure — responsive, extensible navigation shell.
+   Desktop >= 1024px: persistent/collapsible left sidebar.
+   Mobile & tablets < 1024px: accessible off-canvas navigation. */
+:root{--pq-sidebar-open-width:274px;--pq-sidebar-mini-width:76px;--pq-sidebar-width:var(--pq-sidebar-open-width);--pq-topbar-height:70px}
+.pq-app-shell.pq-sidebar-collapsed{--pq-sidebar-width:var(--pq-sidebar-mini-width)}
+.pq-app-shell.pq-public-layout{--pq-sidebar-width:0px}
+/* Keep the viewport toolbar outside the document scroll flow and reserve its space.
+   The same sidebar width variable drives both content offset and header offset. */
+.pq-layout-frame{position:relative;min-width:0;margin-left:var(--pq-sidebar-width);padding-top:var(--pq-topbar-height);transition:margin-left .22s ease}
+.pq-layout-main{min-width:0;width:100%;min-height:calc(100dvh - var(--pq-topbar-height) - 45px)}
+.pq-layout-footer{max-width:1680px;margin:0 auto;padding:24px clamp(12px,2vw,32px);color:#49699c;text-align:center;font-size:12px}
+/* Fixed header: stays visible while documents and dashboards scroll. */
+.pq-topbar{position:fixed;top:0;left:var(--pq-sidebar-width);right:0;z-index:65;display:flex;align-items:center;justify-content:space-between;gap:14px;width:auto;height:var(--pq-topbar-height);min-height:var(--pq-topbar-height);padding:10px clamp(14px,2vw,30px);border-bottom:1px solid #cee2f8;background:rgba(255,255,255,.97);backdrop-filter:blur(14px);box-shadow:0 3px 15px #06357918;transition:left .22s ease}
+.pq-topbar-start,.pq-topbar-actions{display:flex;align-items:center;min-width:0;gap:11px}
+.pq-topbar-start{flex:1}
+.pq-topbar-actions{flex:none}
+.pq-topbar-current{display:flex;flex-direction:column;min-width:0;gap:1px}
+.pq-topbar-overline{color:#6380a7;font-size:10px;font-weight:800;letter-spacing:.075em;white-space:nowrap}
+.pq-topbar-current strong{min-width:0;overflow:hidden;color:#112b65;font-size:18px;font-weight:850;line-height:1.35;text-overflow:ellipsis;white-space:nowrap}
+.pq-topbar-status{display:flex;align-items:center;gap:7px;white-space:nowrap;color:#267a68;font-size:12px;font-weight:750}
+.pq-topbar-icon-btn{position:relative;display:grid;place-items:center;width:42px;height:42px;flex:none;border:1px solid transparent;border-radius:12px;color:#214c87;background:transparent;transition:background .16s,border-color .16s}
+.pq-topbar-icon-btn:hover{background:#eef6ff;border-color:#d5e7fa}
+.pq-topbar-bell-count{position:absolute;top:-2px;right:-5px;display:grid;place-items:center;min-width:19px;height:19px;padding:0 3px;border-radius:999px;background:#e11d48;color:#fff;font-size:10px;font-weight:850}
+.pq-account-area{position:relative;min-width:0}
+.pq-topbar-account{display:flex;align-items:center;gap:9px;max-width:205px;padding:3px 6px 3px 3px;border:1px solid transparent;border-radius:13px;color:#174076;background:transparent}
+.pq-topbar-account:hover{border-color:#d4e7fb;background:#eff7ff}
+.pq-account-avatar,.pq-sidebar-avatar{display:grid;place-items:center;width:37px;height:37px;flex:none;border-radius:12px;background:linear-gradient(135deg,#086bf1,#34b2fd);color:white;font-size:13px;font-weight:900}
+.pq-account-name{overflow:hidden;max-width:130px;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:750}
+.pq-account-menu{position:absolute;right:0;top:calc(100% + 8px);z-index:65;min-width:235px;border:1px solid #d6e5f8;border-radius:15px;background:#fff;padding:7px;box-shadow:0 16px 38px #0d397235}
+.pq-account-email{padding:10px 9px;border-bottom:1px solid #e6eef9;color:#62799d;font-size:12px;overflow-wrap:anywhere}
+.pq-account-menu-action{display:flex;align-items:center;gap:10px;width:100%;margin-top:5px;padding:10px;border-radius:9px;text-align:left;color:#234b83;font-size:13px;font-weight:700}
+.pq-account-menu-action:hover{background:#f0f7ff}
+.pq-account-logout{color:#b91c43}.pq-account-logout:hover{background:#fff0f3}
+.pq-public-brand{display:flex;align-items:center;gap:10px;color:#13256c;font-size:20px;font-weight:900;letter-spacing:-.03em}
+.pq-public-brand span span,.pq-public-brand strong span{color:#1177ef}
+.pq-public-brand-icon{display:grid;place-items:center;width:40px;height:40px;border:2px solid #1677f8;border-radius:12px;color:#1267ec}
+/* Sidebar */
+.pq-nav-sidebar{position:fixed;inset:0 auto 0 0;z-index:80;display:flex;flex-direction:column;width:var(--pq-sidebar-width);height:100dvh;max-height:100dvh;overflow:hidden;background:linear-gradient(180deg,#fff 0%,#f9fcff 100%);border-right:1px solid #d4e5f9;box-shadow:4px 0 22px #0a3d8020;transition:width .22s ease,transform .22s ease}
+.pq-sidebar-brand-row{display:flex;align-items:center;gap:8px;height:81px;min-height:81px;padding:14px 13px 12px 17px;border-bottom:1px solid #e5eefb}
+.pq-sidebar-brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1;text-decoration:none;color:#0c1c58}
+.pq-sidebar-logo{display:grid;place-items:center;flex:none;width:43px;height:43px;border:2px solid #1279f6;border-radius:13px;color:#1169e9;background:#eff7ff}
+.pq-sidebar-brand-copy{display:flex;flex-direction:column;min-width:0;gap:1px;white-space:nowrap}
+.pq-sidebar-brand-copy strong{font-size:19px;font-weight:900;letter-spacing:-.055em;line-height:1.3}
+.pq-sidebar-brand-copy em{font-style:normal;color:#147df5}
+.pq-sidebar-brand-copy small{color:#6483a7;font-size:10px;font-weight:750;letter-spacing:.015em}
+.pq-sidebar-icon-button{display:grid;place-items:center;width:33px;height:33px;flex:none;border:1px solid transparent;border-radius:10px;color:#54749b;background:transparent}
+.pq-sidebar-icon-button:hover{background:#eaf4ff;color:#0c62dd;border-color:#d2e4fa}
+.pq-sidebar-upload{display:flex;align-items:center;justify-content:center;gap:10px;min-height:46px;margin:18px 14px 12px;border-radius:13px;background:linear-gradient(120deg,#0766f3,#049ffd);color:#fff;font-size:13px;font-weight:850;text-align:center;box-shadow:0 7px 18px #126af43a}
+.pq-sidebar-upload:hover{filter:brightness(1.06)}
+.pq-sidebar-navigation{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:5px 11px 16px;scrollbar-width:thin;scrollbar-color:#bcd4ee transparent}
+.pq-sidebar-section{margin:6px 0 9px}
+.pq-sidebar-group-title{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:32px;padding:7px 11px;border-radius:8px;color:#7189a9;text-align:left;font-size:10px;font-weight:900;letter-spacing:.1em}
+.pq-sidebar-group-title:hover{background:#f1f7ff;color:#3065a5}
+.pq-sidebar-group-title svg{transition:transform .16s}.pq-chevron-closed{transform:rotate(-90deg)}
+.pq-sidebar-group-links{display:grid;gap:3px}
+.pq-sidebar-link{position:relative;display:flex;align-items:center;gap:12px;min-height:41px;width:100%;padding:9px 11px;border:1px solid transparent;border-radius:11px;color:#36547c;text-decoration:none;font-size:13px;font-weight:735;transition:background .16s,color .16s,border-color .16s}
+.pq-sidebar-link:hover{background:#edf6ff;color:#075cd6}
+.pq-sidebar-link-icon{flex:none;color:#6a88b1}
+.pq-sidebar-link-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pq-sidebar-link--active{border-color:#c4dfff;background:linear-gradient(90deg,#e5f1ff,#f1f8ff);color:#0861dc;font-weight:850}
+.pq-sidebar-link--active:before{content:"";position:absolute;left:-11px;top:8px;bottom:8px;width:3px;border-radius:3px;background:#147afd}
+.pq-sidebar-link--active .pq-sidebar-link-icon{color:#086cf7}
+.pq-sidebar-alert-badge{display:grid;place-items:center;min-width:19px;height:19px;flex:none;padding:0 4px;border-radius:999px;background:#e11d48;color:#fff;font-size:10px;font-weight:850}
+.pq-sidebar-bottom{flex:none;padding:11px 13px max(13px,env(safe-area-inset-bottom));border-top:1px solid #e5edf8}
+.pq-sidebar-assurance{display:flex;align-items:center;gap:8px;min-height:32px;margin-bottom:10px;color:#6485a7;font-size:10px;font-weight:700;line-height:1.3}
+.pq-sidebar-assurance svg{flex:none;color:#2986c6}
+.pq-sidebar-user{display:flex;align-items:center;gap:9px;min-width:0;padding:8px;border:1px solid #e3edf9;border-radius:12px;background:#f5faff}
+.pq-sidebar-avatar{width:34px;height:34px;border-radius:10px;font-size:12px}
+.pq-sidebar-user-copy{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.pq-sidebar-user-copy strong,.pq-sidebar-user-copy small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pq-sidebar-user-copy strong{font-size:12px;color:#143566;font-weight:800}
+.pq-sidebar-user-copy small{font-size:10px;color:#6681a3}
+/* Desktop compact state */
+@media(min-width:1024px){
+ .pq-nav-sidebar.is-collapsed .pq-sidebar-brand-row{padding:14px 9px;justify-content:center;flex-direction:column;height:116px;min-height:116px;gap:5px}
+ .pq-nav-sidebar.is-collapsed .pq-sidebar-brand{flex:none;justify-content:center}
+ .pq-nav-sidebar.is-collapsed .pq-sidebar-collapse-toggle{width:37px;height:30px}
+ .pq-sidebar-upload--icon{width:46px;height:45px;min-height:45px;margin:14px auto 8px}
+ .pq-nav-sidebar.is-collapsed .pq-sidebar-navigation{padding:3px 8px 12px}
+ .pq-nav-sidebar.is-collapsed .pq-sidebar-section{margin:8px 0}
+ .pq-sidebar-group-divider{height:1px;margin:11px 10px 9px;background:#dbe8f7}
+ .pq-nav-sidebar.is-collapsed .pq-sidebar-group-links{gap:5px}
+ .pq-nav-sidebar.is-collapsed .pq-sidebar-link{min-height:45px;justify-content:center;padding:10px 6px}
+ .pq-nav-sidebar.is-collapsed .pq-sidebar-link--active:before{left:-8px;top:11px;bottom:11px}
+ .pq-sidebar-alert-badge.is-compact{position:absolute;top:0;right:0;min-width:16px;height:16px;font-size:8px}
+ .pq-sidebar-user--compact{justify-content:center;padding:8px 4px}
+}
+/* Sidebar becomes a drawer on tablets / phones. */
+.pq-sidebar-backdrop{display:none}
+@media(max-width:1023px){
+ :root{--pq-sidebar-width:0px}
+ .pq-app-shell.pq-sidebar-collapsed{--pq-sidebar-width:0px}
+ .pq-layout-frame{margin-left:0}
+ .pq-nav-sidebar{width:min(290px,calc(100vw - 48px));transform:translateX(-104%);box-shadow:12px 0 35px #092b5440}
+ .pq-nav-sidebar.is-open{transform:translateX(0)}
+ .pq-sidebar-backdrop{position:fixed;inset:0;z-index:75;display:block;width:100%;height:100dvh;border:0;background:rgba(7,26,54,.54);backdrop-filter:blur(2px)}
+ body.pq-sidebar-open{overflow:hidden}
+ .pq-sidebar-mobile-close{width:40px;height:40px}
+ .pq-topbar-status{display:none}
+ .pq-sidebar-navigation{padding-bottom:32px}
+}
+@media(max-width:600px){
+ :root{--pq-topbar-height:64px;--pq-header-height:64px}
+ .pq-topbar{padding:9px 12px;gap:6px}
+ .pq-topbar-start,.pq-topbar-actions{gap:5px}
+ .pq-topbar-current strong{font-size:15px}
+ .pq-topbar-overline{display:none}
+ .pq-topbar-tool{width:36px;height:38px}
+ .pq-account-name{display:none}
+ .pq-topbar-account{gap:4px;max-width:64px;padding:2px}
+ .pq-account-avatar{width:34px;height:34px}
+ .pq-topbar-icon-btn{width:38px;height:40px}
+ .pq-nav-sidebar{width:min(282px,calc(100vw - 38px))}
+ .pq-public-brand{font-size:18px}
+ .pq-layout-footer{padding:18px 12px;font-size:11px}
+}
+@media(max-width:370px){
+ .pq-topbar{gap:3px;padding:7px 8px}
+ .pq-topbar-actions{gap:2px}
+ .pq-topbar-current strong{font-size:14px}
+ .pq-topbar-tool{width:33px}
+ .pq-topbar-account>svg{display:none}
+}
+/* Content-aware dashboard layout: the viewport CSS breakpoints do not see the sidebar width. */
+@media(min-width:1024px) and (max-width:1580px){
+ .pq-with-sidebar .pq-dashboard-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pq-with-sidebar .pq-dashboard-charts{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pq-with-sidebar .pq-dashboard-security{grid-column:1/-1}
+ .pq-with-sidebar .pq-dashboard-bottom{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pq-with-sidebar .pq-dashboard-activity{grid-column:1/-1}
+}
+@media(min-width:1024px) and (max-width:1240px){
+ .pq-with-sidebar .pq-dashboard-charts,.pq-with-sidebar .pq-dashboard-bottom{grid-template-columns:minmax(0,1fr)}
+ .pq-with-sidebar .pq-dashboard-security,.pq-with-sidebar .pq-dashboard-activity{grid-column:auto}
+ .pq-with-sidebar .pq-dashboard-security .space-y-5{display:block}
+ .pq-with-sidebar .pq-dashboard-security .space-y-5>div{margin-bottom:18px}
+ .pq-with-sidebar .pq-dashboard-donut-layout{flex-wrap:wrap}
+ .pq-with-sidebar .pq-dashboard-type-list{flex-basis:130px}
+ .pq-topbar-status{display:none}
+}
+@media(max-height:690px){
+ .pq-sidebar-brand-row{height:70px;min-height:70px}
+ .pq-sidebar-upload{margin-top:10px;margin-bottom:6px;min-height:41px}
+ .pq-sidebar-group-title{min-height:28px;padding-block:5px}
+ .pq-sidebar-link{min-height:37px;padding-block:7px}
+ .pq-sidebar-bottom{padding-top:7px}
+ .pq-sidebar-assurance{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+ .pq-nav-sidebar,.pq-layout-frame,.pq-topbar,.pq-sidebar-group-title svg{transition:none}
+ .pq-sidebar-fade-enter-active,.pq-sidebar-fade-leave-active{transition:none}
+}
+.pq-sidebar-fade-enter-active,.pq-sidebar-fade-leave-active{transition:opacity .18s}
+.pq-sidebar-fade-enter-from,.pq-sidebar-fade-leave-to{opacity:0}
+
+/* Dialogs must cover the persistent sidebar and the sticky toolbar. */
+.pq-with-sidebar .pq-modal-overlay{z-index:110}
+@media(min-width:1024px) and (max-width:1250px){
+ .pq-with-sidebar .pq-upload-layout{grid-template-columns:minmax(0,1fr)!important}
+ .pq-with-sidebar .pq-workspace-create{flex-wrap:wrap}
+}
+@media(min-width:1024px) and (max-width:1420px){
+ .pq-with-sidebar:not(.pq-sidebar-collapsed) .portal-layout{grid-template-columns:minmax(0,1fr)}
+ .pq-with-sidebar:not(.pq-sidebar-collapsed) .filter-bar{max-width:100%}
+}
